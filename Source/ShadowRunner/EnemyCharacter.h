@@ -26,7 +26,7 @@ public:
 	float GetEnemyMaxHealth();
 
 	UFUNCTION(BlueprintCallable)
-		void TakeDamage(float damage);
+		void CustomTakeDamage(float damage);
 
 protected:
 	// Called when the game starts or when spawned
@@ -65,6 +65,7 @@ private:
 	bool damageTimerFlag;
 
 	float deathCount;
+
 public:
 
 	UAnimMontage* GetMontage() const;

@@ -13,8 +13,9 @@
 //#include "AITags.h"
 #include "BlackBoardKeys.h"
 #include "BehaviorTree/BlackBoardComponent.h"
+#include "Components/CapsuleComponent.h"
 
-extern float volumeControlEnemy;
+ extern float volumeControlEnemy;
 
  // Sets default values
 AEnemyCharacter::AEnemyCharacter()
@@ -156,7 +157,7 @@ UAnimMontage* AEnemyCharacter::GetMontage() const
 	return Montage;
 }
 
-void AEnemyCharacter::TakeDamage(float damage)
+void AEnemyCharacter::CustomTakeDamage(float damage)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("------------------------"));
 	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Prev HP: %f"), GetEnemyHealth()));

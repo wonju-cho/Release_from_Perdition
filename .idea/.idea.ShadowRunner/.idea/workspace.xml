@@ -256,6 +256,20 @@
       <workItem from="1678778169997" duration="12000" />
       <workItem from="1678778237999" duration="3707000" />
       <workItem from="1699448592339" duration="328000" />
+      <workItem from="1718021174203" duration="12000" />
+      <workItem from="1719404529020" duration="116000" />
+      <workItem from="1719404686912" duration="2146000" />
+      <workItem from="1719480352235" duration="2697000" />
+      <workItem from="1719579910141" duration="1631000" />
+      <workItem from="1722151967236" duration="1585000" />
+      <workItem from="1734867739941" duration="2907000" />
+      <workItem from="1735024005618" duration="2202000" />
+      <workItem from="1735044862074" duration="925000" />
+      <workItem from="1735047640038" duration="1601000" />
+      <workItem from="1735111591348" duration="9397000" />
+      <workItem from="1735190345578" duration="6050000" />
+      <workItem from="1735462919537" duration="4233000" />
+      <workItem from="1735471851879" duration="5546000" />
     </task>
     <servers />
   </component>
@@ -265,5 +279,21 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SAmmoWidget.cpp</url>
+          <line>83</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SAmmoWidget.cpp</url>
+          <line>82</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

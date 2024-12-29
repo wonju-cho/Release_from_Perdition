@@ -96,7 +96,7 @@ void AShadowRunnerProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherA
 				{
 					//if (melee != OtherActor)
 					//{
-						melee->TakeDamage(damage);
+						melee->CustomTakeDamage(damage);
 					//}
 				}
 			}

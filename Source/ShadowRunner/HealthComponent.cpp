@@ -2,7 +2,9 @@
 
 
 #include "HealthComponent.h"
-#include "ShadowRunnerHUD.h"
+
+#include "ShadowRunnerCharacter.h"
+#include "ShadowRunnerSlateHUD.h"
 
 // Sets default values for this component's properties
 UHealthComponent::UHealthComponent()
@@ -51,7 +53,7 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 
 void UHealthComponent::UpdateHUD()
 {
-	AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
 	shadowRunnerHUD->UpdateHealth(health, defaultHealth);
 }

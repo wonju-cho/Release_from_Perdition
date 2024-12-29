@@ -14,6 +14,7 @@
 #include "Interactable_Cube1.h"
 #include "EnemyCharacter.h"
 #include "DestructiblePot.h"
+#include "ShadowRunnerSlateHUD.h"
 #include "Engine/GameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -42,9 +43,9 @@ public:
 
 private:
 
+	AShadowRunnerSlateHUD* cachedHUD;
 
-
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UAmmoComponent* ammo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))

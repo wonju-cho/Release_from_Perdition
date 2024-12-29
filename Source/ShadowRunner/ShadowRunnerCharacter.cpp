@@ -34,8 +34,10 @@
 #include "FlyingEnemyCharacter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AmmoWidget.h" //INFINITE
+#include "ShadowRunnerSlateHUD.h"
 #include "Components/ArrowComponent.h"
 #include "Materials/MaterialParameterCollectionInstance.h"
+#include "Materials/MaterialParameterCollection.h"
 //#include "MediaAssets/Public/TimeSynchronizableMediaSource.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -90,33 +92,6 @@ AShadowRunnerCharacter::AShadowRunnerCharacter()
 
 	// Default offset from the character location for projectiles to spawn
 	GunOffset = FVector(100.0f, 0.0f, 10.0f);
-
-	// Note: The ProjectileClass and the skeletal mesh/anim blueprints for Mesh1P, FP_Gun, and VR_Gun 
-	// are set in the derived blueprint asset named MyCharacter to avoid direct content references in C++.
-
-	// Create VR Controllers.
-	//R_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("R_MotionController"));
-	//R_MotionController->MotionSource = FXRMotionControllerBase::RightHandSourceId;
-	//R_MotionController->SetupAttachment(RootComponent);
-	//L_MotionController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("L_MotionController"));
-	//L_MotionController->SetupAttachment(RootComponent);
-
-	// Create a gun and attach it to the right-hand VR controller.
-	// Create a gun mesh component
-	//VR_Gun = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("VR_Gun"));
-	//VR_Gun->SetOnlyOwnerSee(false);			// otherwise won't be visible in the multiplayer
-	//VR_Gun->bCastDynamicShadow = false;
-	//VR_Gun->CastShadow = false;
-	//VR_Gun->SetupAttachment(R_MotionController);
-	//VR_Gun->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
-
-	//VR_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("VR_MuzzleLocation"));
-	//VR_MuzzleLocation->SetupAttachment(VR_Gun);
-	//VR_MuzzleLocation->SetRelativeLocation(FVector(0.000004, 53.999992, 10.000000));
-	//VR_MuzzleLocation->SetRelativeRotation(FRotator(0.0f, 90.0f, 0.0f));		// Counteract the rotation of the VR gun model.
-
-	// Uncomment the following line to turn motion controllers on by default:
-	//bUsingMotionControllers = true;
 
 	ammo = CreateDefaultSubobject<UAmmoComponent>(TEXT("ammo"));
 	HealthBar = CreateDefaultSubobject<UHealthComponent>(TEXT("healthbar"));
@@ -202,20 +177,24 @@ AShadowRunnerCharacter::AShadowRunnerCharacter()
 	muzzleParticleRef = nullptr;
 	muzzleParticleDisplayTime = 8.0f;
 
-	//sibal = GetGameInstance();
-
-	//static ConstructorHelpers::FClassFinder<UGameInstance> hihi(TEXT("/Game/BluePrints/ShadowRunnerGameInstance_BP.ShadowRunnerGameInstance_BP_C"));
-	//WidgetUIClass = WidgetUIBPClass.Class;
-	//sibal->FindFunction(TEXT("Get Volume"));
-	//FOutputDeviceNull hiww;
-	//float his = sibal->CallFunctionByNameWithArguments(TEXT("Get Volume"), hiww, this);
-
 	volumeControlEnemy = soundControl;
 
-	ConstructorHelpers::FObjectFinder<UMaterialParameterCollection>objectType(TEXT("/Game/Assets/Materials/mpc_PostProcess"));
-	if(objectType.Succeeded())
+	// ConstructorHelpers::FObjectFinder<UMaterialParameterCollection>objectType(TEXT("/Game/Assets/Materials/mpc_PostProcess"));
+	// if(objectType.Succeeded())
+	// {
+	// 	collection = objectType.Object;
+	// }
+	
+	const FString Path = TEXT("/Game/Assets/Materials/mpc_PostProcess.mpc_PostProcess");
+	collection = Cast<UMaterialParameterCollection>(StaticLoadObject(UMaterialParameterCollection::StaticClass(), nullptr, *Path));
+
+	if (collection)
 	{
-		collection = objectType.Object;
+	    UE_LOG(LogTemp, Log, TEXT("Material Parameter Collection loaded successfully."));
+	}
+	else
+	{
+	    UE_LOG(LogTemp, Error, TEXT("Failed to load Material Parameter Collection."));
 	}
 	
 	hasSwapped = false;
@@ -235,25 +214,18 @@ void AShadowRunnerCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	cachedHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
-
-	// Show or hide the two versions of the gun based on whether or not we're using motion controllers.
-	//if (bUsingMotionControllers)
-	//{
-	//	VR_Gun->SetHiddenInGame(false, true);
-	//	Mesh1P->SetHiddenInGame(true, true);
-	//}
-	//else
-	//{
-	//	VR_Gun->SetHiddenInGame(true, true);
-		Mesh1P->SetHiddenInGame(false, true);
-	//}
+	
+	Mesh1P->SetHiddenInGame(false, true);
 
 	originMesh = GetActorLocation();
 
-	AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	shadowRunnerHUD->UpdateLifeSystem(lifes);
+	// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	// shadowRunnerHUD->UpdateLifeSystem(lifes);
 
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 
@@ -359,8 +331,7 @@ void AShadowRunnerCharacter::startFire()
 
 				if (enemy != nullptr)
 				{
-					enemy->TakeDamage(pistolDamage);
-
+					enemy->CustomTakeDamage(pistolDamage);
 				}
 
 				AFlyingEnemyCharacter* flyEnemy = Cast<AFlyingEnemyCharacter>(Hit.GetActor());
@@ -427,8 +398,10 @@ void AShadowRunnerCharacter::startFire()
 
 	}
 
-	AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	shadowRunnerHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
+	//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	// shadowRunnerHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
+	//slate로 바꾼거
+	cachedHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
 }
 
 void AShadowRunnerCharacter::stopFire()
@@ -497,8 +470,10 @@ void AShadowRunnerCharacter::OnFire()
 				}
 			}
 		}
-		AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
+		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		// shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
+		//slate로 바꿈
+		cachedHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
 	}
 
 	if (weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->weaponType == EWeaponType::E_Shotgun)
@@ -506,70 +481,6 @@ void AShadowRunnerCharacter::OnFire()
 		startFire();
 		GetWorldTimerManager().SetTimer(TimerHandle_HandleRefire, this, &AShadowRunnerCharacter::startFire, TimeBetweenShots, true);
 	}
-	// try and fire a projectile
-	//original Ammo system
-	/*
-	if (curAmmo == 0)
-   {
-	  ammo->Empty();
-   }
-   else
-   {
-	  //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("HAHAHA")));
-	  // try and fire a projectile
-	  if (ProjectileClass != nullptr)
-	  {
-		 //GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("In OnFire")));
-		 UWorld* const World = GetWorld();
-		 if (World != nullptr)
-		 {
-			if (bUsingMotionControllers)
-			{
-			   const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-			   const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-			   World->SpawnActor<AShadowRunnerProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-			}
-			else
-			{
-			   const FRotator SpawnRotation = GetControlRotation();
-			   // MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			   const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
-
-			   //Set Spawn Collision Handling Override
-			   FActorSpawnParameters ActorSpawnParams;
-			   ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
-			   // spawn the projectile at the muzzle
-			   World->SpawnActor<AShadowRunnerProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-			}
-		 }
-	  }
-
-	  // try and play the sound if specified
-	  if (FireSound != nullptr)
-	  {
-		 UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
-	  }
-
-	  // try and play a firing animation if specified
-	  if (FireAnimation != nullptr)
-	  {
-		 // Get the animation object for the arms mesh
-		 UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
-		 if (AnimInstance != nullptr)
-		 {
-			AnimInstance->Montage_Play(FireAnimation, 1.f);
-		 }
-	  }
-
-	  //ammo->SetAmmoCount(ammo->GetAmmoCount() - 1);
-	  //ammo->SetAmmoCount(curAmmo);
-
-	  curAmmo -= 1;
-	  AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	  shadowRunnerHUD->UpdateAmmo(curAmmo, 10);
-   }
-	*/
 }
 
 void AShadowRunnerCharacter::manualRelaod()
@@ -639,8 +550,10 @@ void AShadowRunnerCharacter::SwitchToNextPrimaryWeapon()
 			SwitchWeaponMesh(weaponIndex);
 			weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->changeType(weaponIndex);
 			manualRelaod();
-			AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			shadowRunnerHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
+			// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			// shadowRunnerHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
+			//slate로 바꿈
+			cachedHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
 		}
 		else
 		{
@@ -648,8 +561,10 @@ void AShadowRunnerCharacter::SwitchToNextPrimaryWeapon()
 			SwitchWeaponMesh(weaponIndex);
 			weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->changeType(weaponIndex);
 			manualRelaod();
-			AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
+			// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			// shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
+			
+			cachedHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
 		}
 		break;
 	case 1:
@@ -659,8 +574,9 @@ void AShadowRunnerCharacter::SwitchToNextPrimaryWeapon()
 			SwitchWeaponMesh(weaponIndex);
 			weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->changeType(weaponIndex);
 			manualRelaod();
-			AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
+			// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			// shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
+			cachedHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
 		}
 		else
 		{
@@ -668,8 +584,8 @@ void AShadowRunnerCharacter::SwitchToNextPrimaryWeapon()
 			SwitchWeaponMesh(weaponIndex);
 			weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->changeType(weaponIndex);
 			manualRelaod();
-			AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
+			// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			cachedHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
 		}
 		break;
 	default:
@@ -711,8 +627,8 @@ void AShadowRunnerCharacter::OnShadowSpawn()
 			// Set cooldown flag to true.
 			bShadowSpawnIsOnCoolDown = true;
 			shadowSpawnCoolDownTimer = shadowSpawnCoolDown;
-			AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			shadowRunnerHUD->UpdateShadowSpawnCooldown(shadowSpawnCoolDownTimer, shadowSpawnCoolDown);
+			// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			cachedHUD->UpdateShadowSpawnCooldown(shadowSpawnCoolDownTimer, shadowSpawnCoolDown);
 		}
 	}
 }
@@ -747,8 +663,8 @@ void AShadowRunnerCharacter::OnShadowSwap()
 			// Set cooldown flag to true.
 			bShadowIsOnCoolDown = true;
 			shadowCloneCoolDownTimer = shadowCloneCoolDown;
-			AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			shadowRunnerHUD->UpdateShadowCooldown(shadowCloneCoolDownTimer, shadowCloneCoolDown);
+			//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			cachedHUD->UpdateShadowCooldown(shadowCloneCoolDownTimer, shadowCloneCoolDown);
 
 			if(pci)
 			{
@@ -902,15 +818,15 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 		inputVector = FVector(0.f);
 	}
 
-	if (HealthBar->isHealthCheat)
-	{
-		HealthBar->SetHealth(INFINITE);
-		currentHealth = HealthBar->GetHealth();
-	}
-	else
-	{
-		currentHealth = HealthBar->GetHealth();
-	}
+	// if (HealthBar->isHealthCheat)
+	// {
+	// 	HealthBar->SetHealth(INFINITE);
+	// 	currentHealth = HealthBar->GetHealth();
+	// }
+	// else
+	// {
+	// 	currentHealth = HealthBar->GetHealth();
+	// }
 
 	//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 
@@ -936,19 +852,19 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 
 	if (HealthBar->GetHealth() < 50)
 	{
-		AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		shadowRunnerHUD->UpdatePlayerLowHealth(true);
+		//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		cachedHUD->UpdatePlayerLowHealth(true);
 	}
 	else
 	{
-		AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		shadowRunnerHUD->UpdatePlayerLowHealth(false);
+		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		cachedHUD->UpdatePlayerLowHealth(false);
 	}
 
 	if (currentHealth < previousHealth)
 	{
-		AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		shadowRunnerHUD->UpdatePlayerOnHitEffect(true, DeltaTime);
+		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		cachedHUD->UpdatePlayerOnHitEffect(true, DeltaTime);
 
 		if (PlayerOnHitSound != nullptr)
 		{
@@ -957,8 +873,8 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 	}
 	else
 	{
-		AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		shadowRunnerHUD->UpdatePlayerOnHitEffect(false, DeltaTime);
+		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		cachedHUD->UpdatePlayerOnHitEffect(false, DeltaTime);
 	}
 
 	if (spawnedActorRef == nullptr)
@@ -975,8 +891,8 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 	{
 		shadowCloneCoolDownTimer -= DeltaTime;
 
-		AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		shadowRunnerHUD->UpdateShadowCooldown(shadowCloneCoolDownTimer, shadowCloneCoolDown);
+		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		cachedHUD->UpdateShadowCooldown(shadowCloneCoolDownTimer, shadowCloneCoolDown);
 
 		if (shadowCloneCoolDownTimer <= 0.0f)
 		{
@@ -989,8 +905,8 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 	{
 		shadowSpawnCoolDownTimer -= DeltaTime;
 
-		AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		shadowRunnerHUD->UpdateShadowSpawnCooldown(shadowSpawnCoolDownTimer, shadowSpawnCoolDown);
+		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		cachedHUD->UpdateShadowSpawnCooldown(shadowSpawnCoolDownTimer, shadowSpawnCoolDown);
 
 		if (shadowSpawnCoolDownTimer <= 0.0f)
 		{
@@ -1066,28 +982,12 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 	surviveTimeMin = (int32)(surviveTime / 60);
 	surviveTime -= surviveTimeMin * 60;
 	surviveTimeSec = surviveTime;
-	AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	shadowRunnerHUD->UpdateTimer(surviveTimeHour, surviveTimeMin, surviveTimeSec);
+	// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	cachedHUD->UpdateTimer(surviveTimeHour, surviveTimeMin, surviveTimeSec);
 }
 
 void AShadowRunnerCharacter::Respawn()
 {
-	//weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo = weapons[0]->GetDefaultObject<ABaseWeapon>()->maxClipAmmo;
-	//weapons[1]->GetDefaultObject<ABaseWeapon>()->clipAmmo = weapons[1]->GetDefaultObject<ABaseWeapon>()->maxClipAmmo;	//sdfammo
-	AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-
-	//if (weaponIndex == 0)
-	//{
-	//	shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
-	//}
-	//else
-	//{
-	//	shadowRunnerHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
-	//}
-
-	//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	//shadowRunnerHUD->UpdateLifeSystem(lifes);
-
 	HealthBar->ResetHealth();
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("current health is %f"), HealthBar->GetHealth() ));
 	SetActorLocation(originMesh);
@@ -1114,46 +1014,8 @@ void AShadowRunnerCharacter::Respawn()
 	Restart();
 	
 	//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	shadowRunnerHUD->UpdatePlayerOnHitEffect(true, 2.f);
+	cachedHUD->UpdatePlayerOnHitEffect(true, 2.f);
 }
-
-//Commenting this section out to be consistent with FPS BP template.
-//This allows the user to turn without using the right virtual joystick
-
-//void AShadowRunnerCharacter::TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location)
-//{
-//	if ((TouchItem.bIsPressed == true) && (TouchItem.FingerIndex == FingerIndex))
-//	{
-//		if (TouchItem.bIsPressed)
-//		{
-//			if (GetWorld() != nullptr)
-//			{
-//				UGameViewportClient* ViewportClient = GetWorld()->GetGameViewport();
-//				if (ViewportClient != nullptr)
-//				{
-//					FVector MoveDelta = Location - TouchItem.Location;
-//					FVector2D ScreenSize;
-//					ViewportClient->GetViewportSize(ScreenSize);
-//					FVector2D ScaledDelta = FVector2D(MoveDelta.X, MoveDelta.Y) / ScreenSize;
-//					if (FMath::Abs(ScaledDelta.X) >= 4.0 / ScreenSize.X)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.X * BaseTurnRate;
-//						AddControllerYawInput(Value);
-//					}
-//					if (FMath::Abs(ScaledDelta.Y) >= 4.0 / ScreenSize.Y)
-//					{
-//						TouchItem.bMoved = true;
-//						float Value = ScaledDelta.Y * BaseTurnRate;
-//						AddControllerPitchInput(Value);
-//					}
-//					TouchItem.Location = Location;
-//				}
-//				TouchItem.Location = Location;
-//			}
-//		}
-//	}
-//}
 
 void AShadowRunnerCharacter::Landed(const FHitResult& Hit)
 {
@@ -1469,15 +1331,15 @@ void AShadowRunnerCharacter::SpawnShadow()
 	/* avoid display playeronhitwidget while summoning shadow */
 
 
-	if (HealthBar->isHealthCheat)
-	{
-		HealthBar->SetHealth(INFINITE);
-		currentHealth = HealthBar->GetHealth();
-	}
-	else
-	{
-		currentHealth = HealthBar->GetHealth();
-	}
+	// if (HealthBar->isHealthCheat)
+	// {
+	// 	HealthBar->SetHealth(INFINITE);
+	// 	currentHealth = HealthBar->GetHealth();
+	// }
+	// else
+	// {
+	// 	currentHealth = HealthBar->GetHealth();
+	// }
 
 	previousHealth = currentHealth;
 }
@@ -1508,7 +1370,7 @@ void AShadowRunnerCharacter::RestoreShadow()
 			AEnemyCharacter* enemy = Cast<AEnemyCharacter>(FoundActors[i]);
 			if (enemy)
 			{
-				enemy->TakeDamage(20.0f);
+				enemy->CustomTakeDamage(20.0f);
 			}
 		}
 	}

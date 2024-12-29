@@ -1,7 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ShadowRunnerGameMode.h"
-#include "ShadowRunnerHUD.h"
 #include "ShadowRunnerCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "KeyPickupActor.h"
@@ -14,7 +13,8 @@ AShadowRunnerGameMode::AShadowRunnerGameMode()
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 
 	// use our custom HUD class
-	HUDClass = AShadowRunnerHUD::StaticClass();
+	//HUDClass = AShadowRunnerHUD::StaticClass();
+	HUDClass = AShadowRunnerSlateHUD::StaticClass();
 }
 
 //void AShadowRunnerGameMode::Respawn(AController* Controller)

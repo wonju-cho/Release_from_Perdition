@@ -42,11 +42,7 @@ public:
 	FString secString;
 
 public:
-	//void Respawn(AController* Controller);
 	void CheckBlueCube(FVector location, FRotator rotation);
-
-protected:
-	//void SpawnItem(FVector location);
 };
 
 
