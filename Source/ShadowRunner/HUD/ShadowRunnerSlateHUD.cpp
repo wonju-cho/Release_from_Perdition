@@ -47,7 +47,7 @@ void AShadowRunnerSlateHUD::BeginPlay()
 	{
 		SAssignNew(ammoWidget, SAmmoWidget)
 		.equippedAmmo(10)
-		.unequippedAmmo(90);
+		.unequippedAmmo(INFINITE);
 
 		GEngine->GameViewport->AddViewportWidgetContent(
 			SNew(SWeakWidget).PossiblyNullContent(ammoWidget.ToSharedRef()));

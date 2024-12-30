@@ -9,15 +9,6 @@
  * 
  */
 
-struct FAmmoTextureSet
-{
-	FSlateBrush rifleBrush;
-	FSlateBrush pistolBrush;
-	FSlateBrush bigAmmoBrush;
-	FSlateBrush smallAmmoBrush;
-	FSlateBrush bgBrush;
-};
-
 #define INFINITE 2147483647 
 class SHADOWRUNNER_API SAmmoWidget: public SCompoundWidget
 {
@@ -45,6 +36,15 @@ class SHADOWRUNNER_API SAmmoWidget: public SCompoundWidget
 	
 	FText infiniteText = FText::FromString(TEXT("∞"));
 
+	struct FAmmoTextureSet
+	{
+		FSlateBrush rifleBrush;
+		FSlateBrush pistolBrush;
+		FSlateBrush bigAmmoBrush;
+		FSlateBrush smallAmmoBrush;
+		FSlateBrush bgBrush;
+	};
+	
 	FAmmoTextureSet ammoTextures;
 	
 	void InitializeTextures();

@@ -319,13 +319,13 @@ void AShadowRunnerCharacter::startFire()
 			//const FVector endTrace = (FirstPersonCameraComponent->GetForwardVector() * WeaponRange) + startTrace;
 			FRotator controlRotation = GetControlRotation();
 			FVector directionVector = controlRotation.Vector();
-		  directionVector.Normalize();
+			directionVector.Normalize();
 			//FVector startTrace = (FP_MuzzleLocation ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + controlRotation.RotateVector(GunOffset);
 			FVector endTrace = startTrace + (directionVector * WeaponRange);
 			FCollisionQueryParams QueryParams = FCollisionQueryParams(SCENE_QUERY_STAT(WeaponTrace), false, this);
 			//DrawDebugLine(GetWorld(), startTrace, endTrace, FColor::Green, false, 1, 0, 1);
 
-			if (GetWorld()->LineTraceSingleByChannel(Hit, startTrace, endTrace, ECC_Pawn, QueryParams))		//weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo -= 1;
+			if (GetWorld()->LineTraceSingleByChannel(Hit, startTrace, endTrace, ECC_Pawn, QueryParams))
 			{
 				AEnemyCharacter* enemy = Cast<AEnemyCharacter>(Hit.GetActor());
 
@@ -375,7 +375,6 @@ void AShadowRunnerCharacter::startFire()
 				{
 					GetWorld()->GetTimerManager().SetTimer(muzzleParticleTimerHandle, this, &AShadowRunnerCharacter::MuzzleParticleTimerCallback, muzzleParticleDisplayTime, false);
 				}
-				//weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo -= 1;
 			}
 
 			if (FireSound != nullptr)
@@ -395,7 +394,6 @@ void AShadowRunnerCharacter::startFire()
 				}
 			}
 		}
-
 	}
 
 	//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
@@ -428,32 +426,22 @@ void AShadowRunnerCharacter::OnFire()
 
 					if (World != nullptr)
 					{
-						//if (bUsingMotionControllers)
-						//{
-						//	const FRotator SpawnRotation = VR_MuzzleLocation->GetComponentRotation();
-						//	const FVector SpawnLocation = VR_MuzzleLocation->GetComponentLocation();
-						//	World->SpawnActor<AShadowRunnerProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
-						//}
-						//else
-						//{
-							const FRotator SpawnRotation = GetControlRotation();
-							// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-							const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
-							//	const FVector SpawnLocation = FirstPersonCameraComponent->GetComponentLocation();
-								//Set Spawn Collision Handling Override
-							FActorSpawnParameters ActorSpawnParams;
-							//ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-							ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-							// spawn the projectile at the 
-
-							World->SpawnActor<AShadowRunnerProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-						//}
+						const FRotator SpawnRotation = GetControlRotation();
+						// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+						const FVector SpawnLocation = ((FP_MuzzleLocation != nullptr) ? FP_MuzzleLocation->GetComponentLocation() : GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+						//	const FVector SpawnLocation = FirstPersonCameraComponent->GetComponentLocation();
+						//Set Spawn Collision Handling Override
+						FActorSpawnParameters ActorSpawnParams;
+						//ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+						ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+						// spawn the projectile at the 
+						World->SpawnActor<AShadowRunnerProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+						
 						weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo -= 1;
 					}
 				}
 				if (FireSound != nullptr)
 				{
-
 					UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation(), soundControl*0.4f);
 				}
 
@@ -584,7 +572,6 @@ void AShadowRunnerCharacter::SwitchToNextPrimaryWeapon()
 			SwitchWeaponMesh(weaponIndex);
 			weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->changeType(weaponIndex);
 			manualRelaod();
-			// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 			cachedHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
 		}
 		break;
@@ -605,14 +592,10 @@ void AShadowRunnerCharacter::OnResetVR()
 
 void AShadowRunnerCharacter::OnShadowSpawn()
 {
-
 	if (playerDied)
 	{
 		return;
 	}
-
-
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("A shadow has spawned behind you.")));
 
 	if (spawnedActorRef) // Restore the shadow.
 	{
@@ -627,7 +610,6 @@ void AShadowRunnerCharacter::OnShadowSpawn()
 			// Set cooldown flag to true.
 			bShadowSpawnIsOnCoolDown = true;
 			shadowSpawnCoolDownTimer = shadowSpawnCoolDown;
-			// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 			cachedHUD->UpdateShadowSpawnCooldown(shadowSpawnCoolDownTimer, shadowSpawnCoolDown);
 		}
 	}
@@ -674,8 +656,6 @@ void AShadowRunnerCharacter::OnShadowSwap()
 		}
 		
 	}
-	
-	
 }
 
 void AShadowRunnerCharacter::OnTest_CloseDoor()
@@ -1200,6 +1180,15 @@ void AShadowRunnerCharacter::CrouchEnd()
 APawn* AShadowRunnerCharacter::GetClone()
 {
 	return spawnedActorRef;
+}
+
+AShadowRunnerSlateHUD* AShadowRunnerCharacter::GetSlateHUD()
+{
+	if(!cachedHUD)
+	{
+		return Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	}
+	return cachedHUD;
 }
 
 bool AShadowRunnerCharacter::EnableTouchscreenMovement(class UInputComponent* PlayerInputComponent)

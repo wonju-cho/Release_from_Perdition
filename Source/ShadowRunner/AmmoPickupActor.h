@@ -7,7 +7,6 @@
 
 #include "Components/BoxComponent.h"
 #include "NiagaraFunctionLibrary.h"
-#include "NiagaraSystem.h"
 #include "NiagaraComponent.h"
 #include "AmmoPickupActor.generated.h"
 

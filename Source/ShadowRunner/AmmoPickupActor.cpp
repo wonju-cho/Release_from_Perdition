@@ -4,7 +4,7 @@
 #include "AmmoPickupActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "ShadowRunnerCharacter.h"
-#include "ShadowRunnerHUD.h"
+#include "ShadowRunnerSlateHUD.h"
 
 extern float volumeControlEnemy;
 
@@ -49,7 +49,6 @@ void AAmmoPickupActor::Tick(float DeltaTime)
 	AddActorLocalRotation(rotationRate * DeltaTime);
 }
 
-
 void AAmmoPickupActor::particlePlay()
 {
 	FVector location = GetActorLocation();
@@ -70,14 +69,11 @@ void AAmmoPickupActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 		{
 			//Increase the ammo of the first gun.
 			player->weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo += player->weapon->GetDefaultObject<ABaseWeapon>()->addClipAmmo;
-
-			// Update HUD.
-			AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 			
 			//Update only for when it is the first gun.
 			if (player->weaponIndex == 0)
 			{
-				shadowRunnerHUD->UpdateAmmo(player->weapons[player->weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, player->weaponIndex); //Original Ammo
+				player->GetSlateHUD()->UpdateAmmo(player->weapons[player->weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, player->weaponIndex); //Original Ammo
 			}
 
 			if (AmmoPickupSound != nullptr)

@@ -43,6 +43,7 @@ public:
 
 private:
 
+	UPROPERTY()
 	AShadowRunnerSlateHUD* cachedHUD;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -116,9 +117,7 @@ public:
 	float pistolDamage;
 
 	float mouse_sensitivity;
-
-
-
+	
 
 	UFUNCTION(BlueprintCallable)
 		float GetMouseSensitivity();
@@ -436,6 +435,8 @@ public:
 		UCameraComponent* cam;
 
 	APawn* GetClone();
+
+	AShadowRunnerSlateHUD* GetSlateHUD();
 
 	UPROPERTY()
 		USpringArmComponent* arm;

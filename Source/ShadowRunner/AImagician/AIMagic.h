@@ -4,14 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Animation/AnimMontage.h"
 #include "ShadowRunner/MagicProjectile.h"
-#include <ShadowRunner/AImagician/MainAnimInstance.h>
-#include "Kismet/GameplayStatics.h"
-#include "NiagaraFunctionLibrary.h"
-#include "NiagaraSystem.h"
 #include "NiagaraComponent.h"
-#include "ShadowRunner/Indicator.h"
+#include "AmmoPickupActor.h"
 #include "AIMagic.generated.h"
 
 UCLASS()
