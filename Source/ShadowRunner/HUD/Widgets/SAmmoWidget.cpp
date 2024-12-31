@@ -43,9 +43,9 @@ void SAmmoWidget::Construct (const FArguments& InArgs)
 				.Image(&ammoTextures.bgBrush)
 			]
 
+			//equipped uis
 			+SOverlay::Slot()
 			[
-				//equipped uis
 				SNew(SBox)
 				.Padding(FMargin(0.0f, 0.f, 60.f, 160.f))
 				.HAlign(HAlign_Right)
@@ -115,9 +115,9 @@ void SAmmoWidget::Construct (const FArguments& InArgs)
 				]
 			]
 
+			//unequipped uis
 			+SOverlay::Slot()
 			[
-				//unequipped uis
 				SNew(SBox)
 				.Padding(FMargin(0.0f, 0.f, 60.f, 70.f))
 				.HAlign(HAlign_Right)
@@ -185,7 +185,6 @@ void SAmmoWidget::Construct (const FArguments& InArgs)
 					]
 				]
 			]
-			
 		]
 	];
 	

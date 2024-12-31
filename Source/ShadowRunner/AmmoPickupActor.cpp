@@ -13,9 +13,7 @@ AAmmoPickupActor::AAmmoPickupActor()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	//sceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
-	//RootComponent = sceneComponent;
+	
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 
 	pickupMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("pickupMesh"));
@@ -35,10 +33,6 @@ void AAmmoPickupActor::BeginPlay()
 {
 	Super::BeginPlay();
 	particlePlay();
-
-	// Doesn't work now need to find solution later.
-	// Put it here to prevent warning and packaging error.
-	//boxCollider->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepWorldTransform);
 }
 
 // Called every frame
