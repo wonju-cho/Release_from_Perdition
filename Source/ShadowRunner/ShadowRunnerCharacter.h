@@ -436,7 +436,7 @@ public:
 
 	APawn* GetClone();
 
-	AShadowRunnerSlateHUD* GetSlateHUD();
+	AShadowRunnerSlateHUD* GetHUD();
 
 	UPROPERTY()
 		USpringArmComponent* arm;

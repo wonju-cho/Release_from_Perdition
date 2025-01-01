@@ -9,13 +9,13 @@
 /**
  * 
  */
+
 class SHADOWRUNNER_API SHealthBarWidget: public SCompoundWidget
 {
 	public:
-		SLATE_BEGIN_ARGS(SHealthBarWidget)
-		{
-		}
-
+		SLATE_BEGIN_ARGS(SHealthBarWidget) {}
+			SLATE_ARGUMENT(TOptional<float>, currHP)
+			SLATE_ARGUMENT(float, maxHP)
 		SLATE_END_ARGS()
 	
 		/** Constructs this widget with InArgs */
@@ -25,7 +25,13 @@ class SHADOWRUNNER_API SHealthBarWidget: public SCompoundWidget
 
 	private:
 		TSharedPtr<SProgressBar> healthProgressBar;
+        FProgressBarStyle progressBarStyle;
+		FSlateBrush progressBGBrush;
+		FSlateBrush fillBrush;
+		FSlateBrush bgBrush;
 
+		void InitializeTextures();
+		
 	protected:
 	virtual int32 OnPaint(
 		const FPaintArgs& Args,

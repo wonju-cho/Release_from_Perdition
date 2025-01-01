@@ -45,18 +45,18 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("ffffffffffffff")));
 
 		// Update HUD.
-		UpdateHUD();
+		player->GetHUD()->UpdateHealth(health, defaultHealth);
 
 		GetWorld()->GetTimerManager().SetTimer(iFrameTimerHandle, this, &UHealthComponent::IFrameCallback, iFrameTime, false);
 	}
 }
 
-void UHealthComponent::UpdateHUD()
-{
-	AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-
-	shadowRunnerHUD->UpdateHealth(health, defaultHealth);
-}
+// void UHealthComponent::UpdateHUD()
+// {
+// 	AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+//
+// 	shadowRunnerHUD->UpdateHealth(health, defaultHealth);
+// }
 
 float UHealthComponent::GetHealth()
 {

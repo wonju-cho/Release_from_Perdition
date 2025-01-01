@@ -1182,7 +1182,7 @@ APawn* AShadowRunnerCharacter::GetClone()
 	return spawnedActorRef;
 }
 
-AShadowRunnerSlateHUD* AShadowRunnerCharacter::GetSlateHUD()
+AShadowRunnerSlateHUD* AShadowRunnerCharacter::GetHUD()
 {
 	if(!cachedHUD)
 	{
