@@ -67,7 +67,7 @@ void AAmmoPickupActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 			//Update only for when it is the first gun.
 			if (player->weaponIndex == 0)
 			{
-				player->GetSlateHUD()->UpdateAmmo(player->weapons[player->weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, player->weaponIndex); //Original Ammo
+				player->GetHUD()->UpdateAmmo(player->weapons[player->weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, player->weaponIndex); //Original Ammo
 			}
 
 			if (AmmoPickupSound != nullptr)

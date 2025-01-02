@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SAmmoWidget.h"
+#include "SHealthBarWidget.h"
 #include "GameFramework/HUD.h"
 #include "ShadowRunnerSlateHUD.generated.h"
 
@@ -21,11 +22,10 @@ public:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void UpdateHealth(float health, float defaultHealth);
-	//void RespawnHealth(float health, float defaultHealth);
+	void UpdateAmmo(int32 equipped, int32 unequipped, int32 defaultAmmo, int32 currentWeapon);
 
 	UFUNCTION()
-	void UpdateAmmo(int32 equipped, int32 unequipped, int32 defaultAmmo, int32 currentWeapon);
+	void UpdateHealth(float currHP, float targetHP);
 
 	UFUNCTION()
 	void UpdateShadowCooldown(float currentTimer, float cooldownTime);
@@ -64,4 +64,9 @@ private:
 
 	/*slate ui 변환*/
 	TSharedPtr<SAmmoWidget> ammoWidget;
+	TSharedPtr<SHealthBarWidget> healthBarWidget;
+
+	void InitializeHealthBarWidget();
+
+	void SetHealthBarTimerInitialization();
 };

@@ -8,6 +8,8 @@
 #include "Engine/Texture2D.h"
 #include "TextureResource.h"
 #include "CanvasItem.h"
+#include "HealthComponent.h"
+#include "ShadowrunnerController.h"
 #include "UObject/ConstructorHelpers.h"
 #include "../AmmoWidget.h"
 #include "../ShadowRunnerCharacter.h"
@@ -19,7 +21,6 @@ AShadowRunnerSlateHUD::AShadowRunnerSlateHUD()
 	static ConstructorHelpers::FObjectFinder<UTexture2D> CrosshairTexObj(TEXT("/Game/FirstPerson/Textures/FirstPersonCrosshair"));
 	CrosshairTex = CrosshairTexObj.Object;
 }
-
 
 void AShadowRunnerSlateHUD::DrawHUD()
 {
@@ -42,22 +43,64 @@ void AShadowRunnerSlateHUD::DrawHUD()
 void AShadowRunnerSlateHUD::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	if(GEngine && GEngine->GameViewport)
 	{
 		SAssignNew(ammoWidget, SAmmoWidget)
 		.equippedAmmo(10)
 		.unequippedAmmo(INFINITE);
 
+		//ammo widget 추가
 		GEngine->GameViewport->AddViewportWidgetContent(
 			SNew(SWeakWidget).PossiblyNullContent(ammoWidget.ToSharedRef()));
+
+		SetHealthBarTimerInitialization();
 	}
 
 }
 
-void AShadowRunnerSlateHUD::UpdateHealth(float health, float defaultHealth)
+void AShadowRunnerSlateHUD::InitializeHealthBarWidget ()
 {
+	AShadowrunnerController* playerController = Cast<AShadowrunnerController>(GetWorld()->GetFirstPlayerController());
+	if(playerController)
+	{
+		AShadowRunnerCharacter* player = Cast<AShadowRunnerCharacter>(playerController->GetPawn());
+		if(player && player->GetHealthBar())
+		{
+			SAssignNew(healthBarWidget, SHealthBarWidget)
+			.maxHP(player->GetHealthBar()->GetDefaultHealth());
 
+			//health bar widget 추가
+			GEngine->GameViewport->AddViewportWidgetContent(
+			SNew(SWeakWidget).PossiblyNullContent(healthBarWidget.ToSharedRef()));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Player or HealthBar is not ready yet."));
+			SetHealthBarTimerInitialization();
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerController is not ready yet."));
+		SetHealthBarTimerInitialization();
+	}
+}
+
+void AShadowRunnerSlateHUD::SetHealthBarTimerInitialization ()
+{
+	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
+	{
+		InitializeHealthBarWidget();
+	});
+}
+
+void AShadowRunnerSlateHUD::UpdateHealth(float currHP, float targetHP)
+{
+	if(healthBarWidget.IsValid())
+	{
+		healthBarWidget->UpdateHealth(currHP, targetHP);
+	}
 }
 
 void AShadowRunnerSlateHUD::UpdateAmmo (int32 equipped, int32 unequipped, int32 defaultAmmo, int32 currentWeapon)
@@ -117,3 +160,4 @@ void AShadowRunnerSlateHUD::UpdatePlayerLowHealth(bool low)
 {
 
 }
+

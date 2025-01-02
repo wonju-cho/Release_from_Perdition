@@ -210,6 +210,15 @@ void AShadowRunnerCharacter::SetMouseSensitivity(float s)
 	mouse_sensitivity = s;
 }
 
+UHealthComponent* AShadowRunnerCharacter::GetHealthBar ()
+{
+	if(HealthBar)
+	{
+		return HealthBar;
+	}
+	return nullptr;
+}
+
 void AShadowRunnerCharacter::BeginPlay()
 {
 	// Call the base class  
@@ -798,17 +807,15 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 		inputVector = FVector(0.f);
 	}
 
-	// if (HealthBar->isHealthCheat)
-	// {
-	// 	HealthBar->SetHealth(INFINITE);
-	// 	currentHealth = HealthBar->GetHealth();
-	// }
-	// else
-	// {
-	// 	currentHealth = HealthBar->GetHealth();
-	// }
-
-	//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+	if (HealthBar->isHealthCheat)
+	{
+		HealthBar->SetHealth(INFINITE);
+		currentHealth = HealthBar->GetHealth();
+	}
+	else
+	{
+		currentHealth = HealthBar->GetHealth();
+	}
 
 	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f, %f, %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z));
 	if (HealthBar->GetHealth() <= 0)
@@ -832,18 +839,15 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 
 	if (HealthBar->GetHealth() < 50)
 	{
-		//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		cachedHUD->UpdatePlayerLowHealth(true);
 	}
 	else
 	{
-		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		cachedHUD->UpdatePlayerLowHealth(false);
 	}
 
 	if (currentHealth < previousHealth)
 	{
-		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		cachedHUD->UpdatePlayerOnHitEffect(true, DeltaTime);
 
 		if (PlayerOnHitSound != nullptr)
@@ -853,7 +857,6 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 	}
 	else
 	{
-		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		cachedHUD->UpdatePlayerOnHitEffect(false, DeltaTime);
 	}
 
@@ -870,8 +873,7 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 	if (bShadowIsOnCoolDown)
 	{
 		shadowCloneCoolDownTimer -= DeltaTime;
-
-		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		
 		cachedHUD->UpdateShadowCooldown(shadowCloneCoolDownTimer, shadowCloneCoolDown);
 
 		if (shadowCloneCoolDownTimer <= 0.0f)
@@ -884,8 +886,7 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 	if (bShadowSpawnIsOnCoolDown)
 	{
 		shadowSpawnCoolDownTimer -= DeltaTime;
-
-		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		
 		cachedHUD->UpdateShadowSpawnCooldown(shadowSpawnCoolDownTimer, shadowSpawnCoolDown);
 
 		if (shadowSpawnCoolDownTimer <= 0.0f)
@@ -962,7 +963,6 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 	surviveTimeMin = (int32)(surviveTime / 60);
 	surviveTime -= surviveTimeMin * 60;
 	surviveTimeSec = surviveTime;
-	// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	cachedHUD->UpdateTimer(surviveTimeHour, surviveTimeMin, surviveTimeSec);
 }
 
@@ -1184,7 +1184,7 @@ APawn* AShadowRunnerCharacter::GetClone()
 
 AShadowRunnerSlateHUD* AShadowRunnerCharacter::GetHUD()
 {
-	if(!cachedHUD)
+	if(cachedHUD == nullptr)
 	{
 		return Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 	}
@@ -1318,17 +1318,16 @@ void AShadowRunnerCharacter::SpawnShadow()
 	UGameplayStatics::ApplyDamage(this, shadowCloneHealthSpent, nullptr, this, damageType);
 
 	/* avoid display playeronhitwidget while summoning shadow */
-
-
-	// if (HealthBar->isHealthCheat)
-	// {
-	// 	HealthBar->SetHealth(INFINITE);
-	// 	currentHealth = HealthBar->GetHealth();
-	// }
-	// else
-	// {
-	// 	currentHealth = HealthBar->GetHealth();
-	// }
+	
+	if (HealthBar->isHealthCheat)
+	{
+		HealthBar->SetHealth(INFINITE);
+		currentHealth = HealthBar->GetHealth();
+	}
+	else
+	{
+		currentHealth = HealthBar->GetHealth();
+	}
 
 	previousHealth = currentHealth;
 }

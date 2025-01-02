@@ -275,6 +275,7 @@
       <workItem from="1735637943603" duration="8442000" />
       <workItem from="1735651824722" duration="2827000" />
       <workItem from="1735736957383" duration="3407000" />
+      <workItem from="1735804315112" duration="14624000" />
     </task>
     <servers />
   </component>
@@ -284,5 +285,16 @@
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/Source/ShadowRunner/HealthComponent.cpp</url>
+          <line>49</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -40,23 +40,27 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 	AShadowRunnerCharacter* player = Cast<AShadowRunnerCharacter>(DamageCauser);
 	if (!GetWorld()->GetTimerManager().IsTimerActive(iFrameTimerHandle) || player)
 	{
-		health = FMath::Clamp(health - Damage, 0.0f, defaultHealth);
+		const float remainHP = FMath::Clamp(health - Damage, 0.0f, defaultHealth);
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("IN DAMEGE: health is %f"), health));
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("ffffffffffffff")));
 
 		// Update HUD.
-		player->GetHUD()->UpdateHealth(health, defaultHealth);
-
+		if(player)
+		{
+			player->GetHUD()->UpdateHealth(health, remainHP);
+			health = remainHP;	
+		}
+		
 		GetWorld()->GetTimerManager().SetTimer(iFrameTimerHandle, this, &UHealthComponent::IFrameCallback, iFrameTime, false);
 	}
 }
 
-// void UHealthComponent::UpdateHUD()
-// {
-// 	AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-//
-// 	shadowRunnerHUD->UpdateHealth(health, defaultHealth);
-// }
+void UHealthComponent::UpdateHUD()
+{
+	AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+
+	shadowRunnerHUD->UpdateHealth(health, health);
+}
 
 float UHealthComponent::GetHealth()
 {

@@ -44,7 +44,7 @@ public:
 private:
 
 	UPROPERTY()
-	AShadowRunnerSlateHUD* cachedHUD;
+	AShadowRunnerSlateHUD* cachedHUD = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UAmmoComponent* ammo;
@@ -131,6 +131,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		USoundBase* GethurtSound;
+
+	UHealthComponent* GetHealthBar();
 protected:
 	virtual void BeginPlay();
 	virtual void Tick(float deltaTime);
