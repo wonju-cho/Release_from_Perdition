@@ -43,16 +43,5 @@ public:
 	virtual void Tick(float dt) override;
 	virtual void SetupInputComponent(class UInputComponent* PlayerInputComponent);
 	////////////////////////////////
-	void OnFire();
-
-	void OnResetVR();
-
-	void MoveForward(float Val);
-
-	void MoveRight(float Val);
-
-	void SprintStart();
-	void SprintEnd();
-
-	bool isSprint = false;
+	
 };
