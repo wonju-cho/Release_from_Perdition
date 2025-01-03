@@ -14,7 +14,11 @@ void SHealthBarWidget::Construct (const FArguments& InArgs)
 	InitializeTextures();
 	
 	maxHP = InArgs._maxHP;
-	progressDisplayHP = progressTargetHP =  maxHP.Get();
+	progressTargetHP =  maxHP.Get();
+
+	shakeAnimation = FCurveSequence();
+	//0초 지연, 0.5초 지속, 부드럽게 진동
+	shakeCurve = shakeAnimation.AddCurve(0.0f, 0.5f, ECurveEaseFunction::QuadInOut);
 	
 	progressBarStyle = FProgressBarStyle()
 	.SetBackgroundImage(FSlateNoResource())
@@ -24,8 +28,8 @@ void SHealthBarWidget::Construct (const FArguments& InArgs)
 	[
 		SNew(SConstraintCanvas)
 		+SConstraintCanvas::Slot()
-		.Anchors(FAnchors(1.0f, 0.0f))
-		.Alignment(FVector2D(1.0f, 0.0f))
+		.Anchors(FAnchors(0.5f, 0.5f)) // 중앙 기준
+		.Alignment(FVector2D(0.5f, 0.5f)) // 중앙 정렬
 		.AutoSize(true)
 		[
 			//배경화면
@@ -40,7 +44,7 @@ void SHealthBarWidget::Construct (const FArguments& InArgs)
 			[
 				SAssignNew(healthProgressBar, SProgressBar)
 				.Style(&progressBarStyle)
-				.Percent(progressDisplayHP / maxHP.Get())
+				.Percent(progressTargetHP / maxHP.Get())
 			]
 
 			+SOverlay::Slot()[
@@ -56,14 +60,33 @@ void SHealthBarWidget::UpdateHealth (float currHP, float targetHP)
 {
 	if (targetHP >= 0 && maxHP.Get() > 0)
 	{
-		progressDisplayHP = currHP;
 		progressTargetHP = targetHP;
 		
-		//healthProgressBar->SetPercent((progressDisplayHP / maxHP.Get()) * 0.28f);
 		const float percent = progressTargetHP / maxHP.Get();
+		UE_LOG(LogTemp, Warning, TEXT("퍼센트 값: %f"), percent);
+		UE_LOG(LogTemp, Warning, TEXT("지금 체력: %d 전체체력: %d"), progressTargetHP, maxHP.Get());
 		healthProgressBar->SetFillColorAndOpacity(GetFillColor(percent));
+		healthProgressBar->SetPercent(percent);
 
-		Invalidate(EInvalidateWidgetReason::Paint);
+		//StartShakeAnimation();
+		
+		//Invalidate(EInvalidateWidgetReason::Paint);
+	}
+}
+
+FLinearColor SHealthBarWidget::GetFillColor (float percent)
+{
+	if (percent >= 0.5f)
+	{
+		return FLinearColor::Green;
+	}
+	else if (percent >= 0.25f && percent < 0.5f)
+	{
+		return FLinearColor::Yellow;
+	}
+	else // health / defaultHealth < 0.25f
+	{
+		return FLinearColor::Red;
 	}
 }
 
@@ -73,7 +96,7 @@ void SHealthBarWidget::InitializeTextures ()
 	UTexture2D* pgBGTex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *progressBGTextPath));
 	if(pgBGTex)
 	{
-		progressBGBrush = FSlateImageBrush(pgBGTex, FVector2D(1920.f, 1080.f));
+		//progressBGBrush = FSlateImageBrush(pgBGTex, FVector2D(1920.f, 1080.f));
 		fillBrush = FSlateImageBrush(pgBGTex, FVector2D(1920.f, 1080.f));
 	}
 	
@@ -93,19 +116,11 @@ void SHealthBarWidget::InitializeTextures ()
 
 }
 
-FLinearColor SHealthBarWidget::GetFillColor (float percent)
+void SHealthBarWidget::StartShakeAnimation ()
 {
-	if (percent >= 0.5f)
+	if(!shakeAnimation.IsPlaying())
 	{
-		return FLinearColor::Green;
-	}
-	else if (percent >= 0.25f && percent < 0.5f)
-	{
-		return FLinearColor::Yellow;
-	}
-	else // health / defaultHealth < 0.25f
-	{
-		return FLinearColor::Red;
+		shakeAnimation.Play(this->AsShared());
 	}
 }
 
@@ -113,23 +128,26 @@ int32 SHealthBarWidget::OnPaint (const FPaintArgs& Args, const FGeometry& Allott
                                  const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId,
                                  const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
 {
-	float lerpSpeed = 0.1f;
-	
-	progressDisplayHP = FMath::Lerp(progressDisplayHP, progressTargetHP, lerpSpeed);
-	
-	if (healthProgressBar.IsValid())
-	{
-		healthProgressBar->SetPercent(progressDisplayHP / maxHP.Get() * 0.28f);
-	}
-
-	if (!FMath::IsNearlyEqual(progressDisplayHP, progressTargetHP, 0.01f))
-	{
-		const_cast<SHealthBarWidget*>(this)->Invalidate(EInvalidateWidgetReason::Paint);
-	}
-	
+	// FVector2D shakeOffset = FVector2D::ZeroVector;
+	//
+	// if(shakeAnimation.IsPlaying())
+	// {
+	// 	float animationVal = shakeCurve.GetLerp();
+	// 	float shakeMagnitude = 5.0f * FMath::Sin(animationVal * 2.0f * PI); // 진폭을 줄임
+	// 	shakeOffset = FVector2D(0, shakeMagnitude);
+	//
+	// 	// 디버깅 로그로 흔들림 오프셋 확인
+	// 	UE_LOG(LogTemp, Warning, TEXT("Shake Offset: %s"), *shakeOffset.ToString());
+	// }
+	//
+	// FSlateRenderTransform Transform(shakeOffset);
+	// FGeometry transformGeometry = AllottedGeometry.MakeChild(shakeOffset, FVector2D(1.0f, 1.0f));
+	//
+	//
 	return SCompoundWidget::OnPaint(
 		Args, AllottedGeometry, MyCullingRect, OutDrawElements, LayerId, InWidgetStyle, bParentEnabled
 	);
 }
+
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

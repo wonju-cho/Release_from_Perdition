@@ -44,7 +44,7 @@ public:
 private:
 
 	UPROPERTY()
-	AShadowRunnerSlateHUD* cachedHUD = nullptr;
+	AShadowRunnerSlateHUD* cachedHUD;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		UAmmoComponent* ammo;
@@ -54,7 +54,7 @@ private:
 
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		//UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		// UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		USkeletalMeshComponent* Mesh1P;
 
 	/** Gun mesh: 1st person view (seen only by self) */
@@ -64,14 +64,6 @@ private:
 	/** Location on gun mesh where projectiles should spawn. */
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		USceneComponent* FP_MuzzleLocation;
-
-	/** Gun mesh: VR view (attached to the VR controller directly, no arm, just the actual gun) */
-	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	//	USkeletalMeshComponent* VR_Gun;
-
-	/** Location on VR gun mesh where projectiles should spawn. */
-	//UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-	//	USceneComponent* VR_MuzzleLocation;
 
 	/** First person camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -240,10 +232,10 @@ public:
 
 	// Shadow clone variables.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		float shadowCloneCoolDown; // For swaping.
+		float shadowCloneCoolDown; // For weapon swap.
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		float shadowCloneCoolDownTimer; // For swaping.
+		float shadowCloneCoolDownTimer; // For weapon swap.
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		float shadowSpawnCoolDown;

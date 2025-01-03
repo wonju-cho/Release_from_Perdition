@@ -4,8 +4,6 @@
 #include "ShadowRunnerCharacter.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/PlayerController.h"
-#include "GameFramework/PlayerController.h"
-#include "GameFramework/InputSettings.h"
 #include "GameFramework/Actor.h"
 
 //DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -34,9 +32,8 @@ void AShadowrunnerController::Tick(float dt)
 
 void AShadowrunnerController::SetupInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	//Super::SetupInputComponent();
+	Super::SetupInputComponent();
 
 	check(PlayerInputComponent);
-	
 }
 

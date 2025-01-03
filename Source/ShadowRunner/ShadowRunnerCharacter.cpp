@@ -16,7 +16,6 @@
 #include "ShadowRunnerHUD.h"
 #include "Master_Interactable.h"
 #include "DrawDebugHelpers.h"
-#include "AIShadowCloneController.h"
 #include "BaseWeapon.h"
 #include "GameFramework/Character.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
@@ -24,7 +23,6 @@
 #include "Perception/AISense_Hearing.h"
 #include "TimerManager.h"
 #include "AITags.h"
-#include "Engine/Classes/Engine/Engine.h"
 #include "FirstDoorActor.h"
 #include "EngineUtils.h"
 #include "AImagician/AIMagicController.h"
@@ -35,7 +33,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "AmmoWidget.h" //INFINITE
 #include "ShadowRunnerSlateHUD.h"
-#include "Components/ArrowComponent.h"
 #include "Materials/MaterialParameterCollectionInstance.h"
 #include "Materials/MaterialParameterCollection.h"
 //#include "MediaAssets/Public/TimeSynchronizableMediaSource.h"
@@ -404,9 +401,7 @@ void AShadowRunnerCharacter::startFire()
 			}
 		}
 	}
-
-	//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-	// shadowRunnerHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
+	
 	//slate로 바꾼거
 	cachedHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
 }
@@ -467,8 +462,7 @@ void AShadowRunnerCharacter::OnFire()
 				}
 			}
 		}
-		// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-		// shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
+		
 		//slate로 바꿈
 		cachedHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
 	}
@@ -547,9 +541,6 @@ void AShadowRunnerCharacter::SwitchToNextPrimaryWeapon()
 			SwitchWeaponMesh(weaponIndex);
 			weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->changeType(weaponIndex);
 			manualRelaod();
-			// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			// shadowRunnerHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
-			//slate로 바꿈
 			cachedHUD->UpdateAmmo(INFINITE, weapons[0]->GetDefaultObject<ABaseWeapon>()->clipAmmo, 10, weaponIndex);
 		}
 		else
@@ -558,9 +549,6 @@ void AShadowRunnerCharacter::SwitchToNextPrimaryWeapon()
 			SwitchWeaponMesh(weaponIndex);
 			weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->changeType(weaponIndex);
 			manualRelaod();
-			// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			// shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
-			
 			cachedHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
 		}
 		break;
@@ -571,8 +559,6 @@ void AShadowRunnerCharacter::SwitchToNextPrimaryWeapon()
 			SwitchWeaponMesh(weaponIndex);
 			weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->changeType(weaponIndex);
 			manualRelaod();
-			// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			// shadowRunnerHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
 			cachedHUD->UpdateAmmo(weapons[weaponIndex]->GetDefaultObject<ABaseWeapon>()->clipAmmo, INFINITE, 10, weaponIndex);
 		}
 		else
@@ -654,7 +640,6 @@ void AShadowRunnerCharacter::OnShadowSwap()
 			// Set cooldown flag to true.
 			bShadowIsOnCoolDown = true;
 			shadowCloneCoolDownTimer = shadowCloneCoolDown;
-			//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 			cachedHUD->UpdateShadowCooldown(shadowCloneCoolDownTimer, shadowCloneCoolDown);
 
 			if(pci)
@@ -816,10 +801,11 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 	{
 		currentHealth = HealthBar->GetHealth();
 	}
-
-	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("%f, %f, %f"), GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z));
+	
 	if (HealthBar->GetHealth() <= 0)
 	{
+		UE_LOG(LogTemp, Log, TEXT("Player is dead"));
+		
 		if (PlayerDieSound != nullptr)
 		{
 			//UGameplayStatics::PlaySoundAtLocation(this, PlayerDieSound, GetActorLocation());

@@ -32,11 +32,14 @@ class SHADOWRUNNER_API SHealthBarWidget: public SCompoundWidget
 		void InitializeTextures();
 
 	private:
-		mutable float progressDisplayHP;
 		float progressTargetHP;
 		TAttribute<float> maxHP;
 
 		FLinearColor GetFillColor(float percent);
+		FCurveSequence shakeAnimation;
+		FCurveHandle shakeCurve;
+
+		void StartShakeAnimation();
 
 	protected:
 	virtual int32 OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;

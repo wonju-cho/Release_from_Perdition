@@ -20,7 +20,6 @@ UHealthComponent::UHealthComponent()
 	iFrameTime = 1.0f;
 }
 
-
 // Called when the game starts
 void UHealthComponent::BeginPlay()
 {
@@ -37,18 +36,19 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	// Setup i-frame.
-	AShadowRunnerCharacter* player = Cast<AShadowRunnerCharacter>(DamageCauser);
+	AShadowRunnerCharacter* player = Cast<AShadowRunnerCharacter>(DamagedActor);
 	if (!GetWorld()->GetTimerManager().IsTimerActive(iFrameTimerHandle) || player)
 	{
-		const float remainHP = FMath::Clamp(health - Damage, 0.0f, defaultHealth);
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("IN DAMEGE: health is %f"), health));
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("ffffffffffffff")));
-
+		
 		// Update HUD.
 		if(player)
 		{
-			player->GetHUD()->UpdateHealth(health, remainHP);
-			health = remainHP;	
+			UE_LOG(LogTemp, Warning, TEXT("health : %d \t health - Damage: %d \t defaultHealth: %d"), health, health - Damage, defaultHealth);
+			health = FMath::Clamp(health - Damage, 0.0f, defaultHealth);
+			UE_LOG(LogTemp, Warning, TEXT("health: %d"), health);
+			player->GetHUD()->UpdateHealth(health, health);
 		}
 		
 		GetWorld()->GetTimerManager().SetTimer(iFrameTimerHandle, this, &UHealthComponent::IFrameCallback, iFrameTime, false);

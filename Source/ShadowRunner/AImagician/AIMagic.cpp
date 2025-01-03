@@ -9,9 +9,11 @@
 #include "ShadowRunner/ShadowRunnerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "HealthPickupActor.h"
 #include "ShadowRunner/AImagician/AIMagicController.h"
 #include "ShadowRunner/AImagician/AIMagic_blackBoard_Keys.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/CapsuleComponent.h"
 
 extern float volumeControlEnemy;
 
