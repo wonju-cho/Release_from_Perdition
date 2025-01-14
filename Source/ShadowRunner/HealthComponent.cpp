@@ -16,6 +16,8 @@ UHealthComponent::UHealthComponent()
 	// Set default health.
 	defaultHealth = 150;
 	health = defaultHealth;
+	
+	UE_LOG(LogTemp, Warning, TEXT("Health Component Initialized: DefaultHealth: %f, Health: %f"), defaultHealth, health);
 
 	iFrameTime = 1.0f;
 }
@@ -35,6 +37,7 @@ void UHealthComponent::BeginPlay()
 
 void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
+	// UGameplayStatics::ApplyDamage(PlayerCharacter, 5.0f, nullptr, this, damageType);
 	// Setup i-frame.
 	AShadowRunnerCharacter* player = Cast<AShadowRunnerCharacter>(DamagedActor);
 	if (!GetWorld()->GetTimerManager().IsTimerActive(iFrameTimerHandle) || player)
@@ -45,10 +48,14 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 		// Update HUD.
 		if(player)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("health : %d \t health - Damage: %d \t defaultHealth: %d"), health, health - Damage, defaultHealth);
-			health = FMath::Clamp(health - Damage, 0.0f, defaultHealth);
-			UE_LOG(LogTemp, Warning, TEXT("health: %d"), health);
-			player->GetHUD()->UpdateHealth(health, health);
+			UE_LOG(LogTemp, Warning, TEXT("defaultHealth: %d"), defaultHealth);
+			const float remainHP = FMath::Clamp(health - Damage, 0.0f, defaultHealth);
+			if(DamageCauser->Tags.Contains(TEXT("Melee")) || DamageCauser->Tags.Contains(TEXT("Maigician"))){
+			}
+				UE_LOG(LogTemp, Warning, TEXT("health : %d \t health - Damage: %d \t defaultHealth: %d"), health, remainHP, defaultHealth);
+				UE_LOG(LogTemp, Warning, TEXT("health: %d"), health);
+				health = remainHP;
+				player->GetHUD()->UpdateHealth(health, health);
 		}
 		
 		GetWorld()->GetTimerManager().SetTimer(iFrameTimerHandle, this, &UHealthComponent::IFrameCallback, iFrameTime, false);

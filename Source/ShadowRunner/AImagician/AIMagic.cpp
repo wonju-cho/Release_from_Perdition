@@ -221,7 +221,7 @@ void AAIMagic::Attack()
 
 		if (sqrt(x * x + y * y) <= 500.f)
 		{
-			ACharacter* const PlayerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+			AShadowRunnerCharacter* PlayerCharacter = Cast<AShadowRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 			TSubclassOf<UDamageType> damageType;
 			UGameplayStatics::ApplyDamage(PlayerCharacter, 5.0f, nullptr, this, damageType);
 		}
@@ -229,7 +229,6 @@ void AAIMagic::Attack()
 		if (cont)
 		{
 			cont->get_blackBoard()->SetValueAsBool(magic_bb_keys::got_attack_behind, false);
-
 		}
 
 	}

@@ -70,6 +70,7 @@ void AShadowRunnerSlateHUD::InitializeHealthBarWidget ()
 			SAssignNew(healthBarWidget, SHealthBarWidget)
 			.maxHP(player->GetHealthBar()->GetDefaultHealth());
 
+			UE_LOG(LogTemp, Warning, TEXT("HealthBar Widget is created."))
 			//health bar widget 추가
 			GEngine->GameViewport->AddViewportWidgetContent(
 			SNew(SWeakWidget).PossiblyNullContent(healthBarWidget.ToSharedRef()));

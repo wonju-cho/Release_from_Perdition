@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SlateMaterialBrush.h"
 #include "Widgets/SCompoundWidget.h"
 #include "Widgets/Notifications/SProgressBar.h"
 
@@ -26,6 +27,7 @@ class SHADOWRUNNER_API SHealthBarWidget: public SCompoundWidget
         FProgressBarStyle progressBarStyle;
 		FSlateBrush progressBGBrush;
 		FSlateBrush fillBrush;
+		// FSlateMaterialBrush* fillBrush;
 		FSlateBrush bgBrush;
 		FSlateBrush strokeBrush;
 

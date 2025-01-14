@@ -11,7 +11,13 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 void SHealthBarWidget::Construct (const FArguments& InArgs)
 {
+	
 	InitializeTextures();
+
+	progressBarStyle = FProgressBarStyle()
+			.SetBackgroundImage(FSlateNoResource())
+			.SetFillImage(fillBrush) 
+			.SetMarqueeImage(FSlateNoResource());
 	
 	maxHP = InArgs._maxHP;
 	progressTargetHP =  maxHP.Get();
@@ -19,41 +25,46 @@ void SHealthBarWidget::Construct (const FArguments& InArgs)
 	shakeAnimation = FCurveSequence();
 	//0초 지연, 0.5초 지속, 부드럽게 진동
 	shakeCurve = shakeAnimation.AddCurve(0.0f, 0.5f, ECurveEaseFunction::QuadInOut);
-	
-	progressBarStyle = FProgressBarStyle()
-	.SetBackgroundImage(FSlateNoResource())
-	.SetFillImage(fillBrush);
+
+	//progressBarStyle.FillImage.DrawAs = ESlateBrushDrawType::Image;
 	
 	ChildSlot
 	[
 		SNew(SConstraintCanvas)
 		+SConstraintCanvas::Slot()
-		.Anchors(FAnchors(0.5f, 0.5f)) // 중앙 기준
-		.Alignment(FVector2D(0.5f, 0.5f)) // 중앙 정렬
-		.AutoSize(true)
+		.Anchors(FAnchors(0.0f, 0.0f, 1.0f, 1.0f))
+		.Alignment(FVector2D(0.0f,0.0f))
 		[
-			//배경화면
+			//cross icon image
 			SNew(SOverlay)
 			+SOverlay::Slot()
 			[
 				SNew(SImage)
 				.Image(&bgBrush)
 			]
-			
-			+SOverlay::Slot()
-			[
-				SAssignNew(healthProgressBar, SProgressBar)
-				.Style(&progressBarStyle)
-				.Percent(progressTargetHP / maxHP.Get())
-			]
+		]
 
-			+SOverlay::Slot()[
-				SNew(SImage)
-				.Image(&strokeBrush)
-			]
+		+SConstraintCanvas::Slot()
+		.Anchors(FAnchors(0.0f, 0.0f)) // 프로그래스 바 위치 설정 (좌상단 기준)
+		.Alignment(FVector2D(0.0f, 0.0f)) // 좌상단 정렬
+		.Offset(FMargin(330, 94, 510, 90))
+		[
+			SAssignNew(healthProgressBar, SProgressBar)
+			.Style(&progressBarStyle)
+			.BarFillType(EProgressBarFillType::LeftToRight)
+			.Percent(progressTargetHP / maxHP.Get())
+		]
+
+		//stroke image
+		+SConstraintCanvas::Slot()
+		.Anchors(FAnchors(0.0f, 0.0f)) // 좌측 상단 기준
+		.Alignment(FVector2D(0.0f, 0.0f)) // 좌측 상단 정렬
+		.Offset(FMargin(320, 78, 530, 120)) // ProgressBar 위치와 동일
+		[
+			SNew(SImage)
+			.Image(&strokeBrush)
 		]
 	];
-	
 }
 
 void SHealthBarWidget::UpdateHealth (float currHP, float targetHP)
@@ -65,6 +76,7 @@ void SHealthBarWidget::UpdateHealth (float currHP, float targetHP)
 		const float percent = progressTargetHP / maxHP.Get();
 		UE_LOG(LogTemp, Warning, TEXT("퍼센트 값: %f"), percent);
 		UE_LOG(LogTemp, Warning, TEXT("지금 체력: %d 전체체력: %d"), progressTargetHP, maxHP.Get());
+		
 		healthProgressBar->SetFillColorAndOpacity(GetFillColor(percent));
 		healthProgressBar->SetPercent(percent);
 
@@ -92,12 +104,15 @@ FLinearColor SHealthBarWidget::GetFillColor (float percent)
 
 void SHealthBarWidget::InitializeTextures ()
 {
-	const FString progressBGTextPath = TEXT("/Game/Assets/HUD/HP/HUD_HP_BarFill");
+	const FString progressBGTextPath = TEXT("/Game/Assets/HUD/HP/HUD_HP_BarFill_alpha.HUD_HP_BarFill_alpha");
 	UTexture2D* pgBGTex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *progressBGTextPath));
 	if(pgBGTex)
 	{
-		//progressBGBrush = FSlateImageBrush(pgBGTex, FVector2D(1920.f, 1080.f));
-		fillBrush = FSlateImageBrush(pgBGTex, FVector2D(1920.f, 1080.f));
+		fillBrush = FSlateImageBrush(pgBGTex, FVector2D(2000.f, 1140.f));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("pgBGTex is not loaded"));
 	}
 	
 	const FString bgTextPath = TEXT("/Game/Assets/HUD/HP/HUD_HP_Cross");
@@ -106,12 +121,20 @@ void SHealthBarWidget::InitializeTextures ()
 	{
 		bgBrush = FSlateImageBrush(bgTex, FVector2D(1920.f, 1080.f));
 	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("bgTex is not loaded"));
+	}
 
-	const FString strokeTextPath = TEXT("/Game/Assets/HUD/HP/HUD_HP_BarStroke.HUD_HP_BarStroke");
+	const FString strokeTextPath = TEXT("/Game/Assets/HUD/HP/HUD_HP_BarStroke_resize");
 	UTexture2D* strokeTex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *strokeTextPath));
-	if(bgTex)
+	if(strokeTex)
 	{
 		strokeBrush = FSlateImageBrush(strokeTex, FVector2D(1920.f, 1080.f));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("strokeTex is not loaded"));
 	}
 
 }
