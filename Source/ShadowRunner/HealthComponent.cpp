@@ -48,12 +48,12 @@ void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const clas
 		// Update HUD.
 		if(player)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("defaultHealth: %d"), defaultHealth);
+			//UE_LOG(LogTemp, Warning, TEXT("defaultHealth: %d"), defaultHealth);
 			const float remainHP = FMath::Clamp(health - Damage, 0.0f, defaultHealth);
 			if(DamageCauser->Tags.Contains(TEXT("Melee")) || DamageCauser->Tags.Contains(TEXT("Maigician"))){
 			}
-				UE_LOG(LogTemp, Warning, TEXT("health : %d \t health - Damage: %d \t defaultHealth: %d"), health, remainHP, defaultHealth);
-				UE_LOG(LogTemp, Warning, TEXT("health: %d"), health);
+				// UE_LOG(LogTemp, Warning, TEXT("health : %d \t health - Damage: %d \t defaultHealth: %d"), health, remainHP, defaultHealth);
+				// UE_LOG(LogTemp, Warning, TEXT("health: %d"), health);
 				health = remainHP;
 				player->GetHUD()->UpdateHealth(health, health);
 		}

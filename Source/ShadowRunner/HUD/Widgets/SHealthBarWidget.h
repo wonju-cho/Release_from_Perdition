@@ -24,6 +24,7 @@ class SHADOWRUNNER_API SHealthBarWidget: public SCompoundWidget
 
 	private:
 		TSharedPtr<SProgressBar> healthProgressBar;
+		TSharedPtr<SImage> strokeImage;
         FProgressBarStyle progressBarStyle;
 		FSlateBrush progressBGBrush;
 		FSlateBrush fillBrush;
@@ -35,6 +36,7 @@ class SHADOWRUNNER_API SHealthBarWidget: public SCompoundWidget
 
 	private:
 		float progressTargetHP;
+		float currPercent;
 		TAttribute<float> maxHP;
 
 		FLinearColor GetFillColor(float percent);
