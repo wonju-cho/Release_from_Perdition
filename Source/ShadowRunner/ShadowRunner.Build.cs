@@ -25,7 +25,8 @@ public class ShadowRunner : ModuleRules
 			"RHI",
     		"RenderCore",
 			"Niagara", 
-			"ApexDestruction"
+			"ApexDestruction",
+			"ApplicationCore"
 		});
 
 		PublicIncludePaths.AddRange(new string[] {

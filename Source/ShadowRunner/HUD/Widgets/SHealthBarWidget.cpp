@@ -13,6 +13,7 @@ void SHealthBarWidget::Construct (const FArguments& InArgs)
 {
 	
 	InitializeTextures();
+	
 
 	progressBarStyle = FProgressBarStyle()
 			.SetBackgroundImage(FSlateNoResource())
