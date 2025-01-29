@@ -9,7 +9,10 @@
 #include "TextureResource.h"
 #include "CanvasItem.h"
 #include "HealthComponent.h"
+#include "LockUnlockWidget.h"
+#include "PlayerOnHitWidget.h"
 #include "ShadowrunnerController.h"
+#include "PlayerLowHealthWidget.h"
 #include "UObject/ConstructorHelpers.h"
 #include "../AmmoWidget.h"
 #include "../ShadowRunnerCharacter.h"
@@ -43,20 +46,22 @@ void AShadowRunnerSlateHUD::DrawHUD()
 void AShadowRunnerSlateHUD::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//slate widget 초기화
 	if(GEngine && GEngine->GameViewport)
 	{
-		SAssignNew(ammoWidget, SAmmoWidget)
+		SAssignNew(AmmoWidget, SAmmoWidget)
 		.equippedAmmo(10)
 		.unequippedAmmo(INFINITE);
 
 		//ammo widget 추가
 		GEngine->GameViewport->AddViewportWidgetContent(
-			SNew(SWeakWidget).PossiblyNullContent(ammoWidget.ToSharedRef()));
+			SNew(SWeakWidget).PossiblyNullContent(AmmoWidget.ToSharedRef()));
 
 		SetHealthBarTimerInitialization();
 	}
 
+	InitializeUMGWidgets();
 }
 
 void AShadowRunnerSlateHUD::InitializeHealthBarWidget ()
@@ -67,13 +72,13 @@ void AShadowRunnerSlateHUD::InitializeHealthBarWidget ()
 		AShadowRunnerCharacter* player = Cast<AShadowRunnerCharacter>(playerController->GetPawn());
 		if(player && player->GetHealthBar())
 		{
-			SAssignNew(healthBarWidget, SHealthBarWidget)
+			SAssignNew(HealthBarWidget, SHealthBarWidget)
 			.maxHP(player->GetHealthBar()->GetDefaultHealth());
 
 			UE_LOG(LogTemp, Warning, TEXT("HealthBar Widget is created."))
 			//health bar widget 추가
 			GEngine->GameViewport->AddViewportWidgetContent(
-			SNew(SWeakWidget).PossiblyNullContent(healthBarWidget.ToSharedRef()));
+			SNew(SWeakWidget).PossiblyNullContent(HealthBarWidget.ToSharedRef()));
 		}
 		else
 		{
@@ -88,6 +93,36 @@ void AShadowRunnerSlateHUD::InitializeHealthBarWidget ()
 	}
 }
 
+void AShadowRunnerSlateHUD::InitializeUMGWidgets ()
+{
+	if (LockUnlockWidgetClass)
+	{
+		LockUnlockWidget = CreateWidget<ULockUnlockWidget>(GetWorld(), LockUnlockWidgetClass);
+		if (LockUnlockWidget)
+		{
+			LockUnlockWidget->AddToViewport();
+		}
+	}
+
+	if (PlayerOnHitWidgetClass)
+	{
+		PlayerOnHitWidget = Cast<UPlayerOnHitWidget>(CreateWidget<UPlayerOnHitWidget>(GetWorld(), PlayerOnHitWidgetClass));
+		if (PlayerOnHitWidget)
+		{
+			PlayerOnHitWidget->AddToViewport();
+		}
+	}
+  
+	if(PlayerLowHealthWidgetClass)
+	{
+		PlayerLowHealthWidget = CreateWidget<UPlayerLowHealthWidget>(GetWorld(), PlayerLowHealthWidgetClass);
+		if(PlayerLowHealthWidget)
+		{
+			PlayerLowHealthWidget->AddToViewport();
+		}
+	}
+}
+
 void AShadowRunnerSlateHUD::SetHealthBarTimerInitialization ()
 {
 	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
@@ -98,67 +133,54 @@ void AShadowRunnerSlateHUD::SetHealthBarTimerInitialization ()
 
 void AShadowRunnerSlateHUD::UpdateHealth(float currHP, float targetHP)
 {
-	if(healthBarWidget.IsValid())
+	if(HealthBarWidget.IsValid())
 	{
-		healthBarWidget->UpdateHealth(currHP, targetHP);
+		HealthBarWidget->UpdateHealth(currHP, targetHP);
 	}
 }
 
 void AShadowRunnerSlateHUD::UpdateAmmo (int32 equipped, int32 unequipped, int32 defaultAmmo, int32 currentWeapon)
 {
-	if(ammoWidget.IsValid())
+	if(AmmoWidget.IsValid())
 	{
-		ammoWidget->UpdateAmmo(equipped, unequipped, defaultAmmo, currentWeapon);
+		AmmoWidget->UpdateAmmo(equipped, unequipped, defaultAmmo, currentWeapon);
 	}
-}
-
-void AShadowRunnerSlateHUD::UpdateShadowCooldown(float currentTimer, float cooldownTime)
-{
-
-}
-
-void AShadowRunnerSlateHUD::UpdateShadowSpawnCooldown(float currentTimer, float cooldownTime)
-{
-
 }
 
 void AShadowRunnerSlateHUD::UpdateAbilities(AShadowRunnerCharacter* player)
 {
-
-}
-
-void AShadowRunnerSlateHUD::UpdateTimer(int32 hour, int32 min, float sec)
-{
-
+	
 }
 
 void AShadowRunnerSlateHUD::DisplayLocked()
 {
-
+	if (LockUnlockWidgetClass)
+	{
+		LockUnlockWidget->DisplayLocked();
+	}
 }
 
 void AShadowRunnerSlateHUD::DisplayUnlocked()
 {
-	
-}
-
-void AShadowRunnerSlateHUD::UpdateLifeSystem(int lifes)
-{
-
-}
-
-void AShadowRunnerSlateHUD::UpdateWaveSystem(int waves)
-{
-
+	if (LockUnlockWidgetClass)
+	{
+		LockUnlockWidget->DisplayUnlocked();
+	}
 }
 
 void AShadowRunnerSlateHUD::UpdatePlayerOnHitEffect(bool justgothit, float deltatime)
 {
-
+	if (PlayerOnHitWidgetClass)
+	{
+		PlayerOnHitWidget->UpdatePlayerOnHitWidget(justgothit, deltatime);
+	}
 }
 
 void AShadowRunnerSlateHUD::UpdatePlayerLowHealth(bool low)
 {
-
+	if(PlayerLowHealthWidgetClass)
+	{
+		PlayerLowHealthWidget->UpdatePlayerLowHealth(low);
+	}
 }
 

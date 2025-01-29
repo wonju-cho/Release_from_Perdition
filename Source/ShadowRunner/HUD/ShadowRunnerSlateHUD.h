@@ -54,19 +54,34 @@ public:
 	UFUNCTION()
 		void UpdatePlayerOnHitEffect(bool justgothit, float deltatime);
 
-  UFUNCTION()
+	UFUNCTION()
 		void UpdatePlayerLowHealth(bool low);
     
+	public:
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+	TSubclassOf<UUserWidget> LockUnlockWidgetClass;
 
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+	TSubclassOf<UUserWidget> PlayerOnHitWidgetClass;
+  
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+	TSubclassOf<UUserWidget> PlayerLowHealthWidgetClass;
+	
 private:
 	/** Crosshair asset pointer */
 	class UTexture2D* CrosshairTex;
 
-	/*slate ui 변환*/
-	TSharedPtr<SAmmoWidget> ammoWidget;
-	TSharedPtr<SHealthBarWidget> healthBarWidget;
+	/*slate ui들*/
+	TSharedPtr<SAmmoWidget> AmmoWidget;
+	TSharedPtr<SHealthBarWidget> HealthBarWidget;
 
+	class ULockUnlockWidget* LockUnlockWidget;
+	class UPlayerOnHitWidget* PlayerOnHitWidget;
+	class UPlayerLowHealthWidget* PlayerLowHealthWidget;
+	
 	void InitializeHealthBarWidget();
 
+	void InitializeUMGWidgets();
+	
 	void SetHealthBarTimerInitialization();
 };

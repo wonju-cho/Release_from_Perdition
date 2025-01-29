@@ -19,12 +19,18 @@
     <setting file="file://C:/Program Files/Epic Games/UE_4.26/Engine/Source/Runtime/Core/Public/Misc/Attribute.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Epic Games/UE_4.26/Engine/Source/Runtime/Core/Public/Misc/Optional.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Epic Games/UE_4.26/Engine/Source/Runtime/Core/Public/Templates/SharedPointerInternals.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://C:/Program Files/Epic Games/UE_4.26/Engine/Source/Runtime/CoreUObject/Public/UObject/SparseDelegate.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Epic Games/UE_4.26/Engine/Source/Runtime/Engine/Classes/Components/ActorComponent.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Epic Games/UE_4.26/Engine/Source/Runtime/Engine/Classes/Engine/World.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://C:/Program Files/Epic Games/UE_4.26/Engine/Source/Runtime/Slate/Private/Widgets/Notifications/SProgressBar.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Epic Games/UE_4.26/Engine/Source/Runtime/UMG/Public/Components/ProgressBar.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/AImagician/AIMagic.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/ShadowRunnerSlateHUD.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/FUIManager.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/FUIManager.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SAmmoWidget.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SAmmoWidget.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SHealthBarWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SHealthBarWidget.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HealthBarWidget.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HealthComponent.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -37,7 +43,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="Toolset" />
   </component>
   <component name="ProjectId" id="2MzlCRfrNItXq8Xmw47NxcUW8qi" />
   <component name="ProjectViewState">
@@ -324,7 +330,10 @@
       <workItem from="1737552778027" duration="2866000" />
       <workItem from="1737975800245" duration="2488000" />
       <workItem from="1738077575630" duration="593000" />
-      <workItem from="1738156257571" duration="5196000" />
+      <workItem from="1738156257571" duration="5368000" />
+      <workItem from="1738166502894" duration="644000" />
+      <workItem from="1738168451856" duration="594000" />
+      <workItem from="1738169906283" duration="1963000" />
     </task>
     <servers />
   </component>
