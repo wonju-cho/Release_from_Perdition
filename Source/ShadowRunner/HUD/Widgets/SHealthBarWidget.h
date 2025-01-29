@@ -45,6 +45,19 @@ class SHADOWRUNNER_API SHealthBarWidget: public SCompoundWidget
 
 		void StartShakeAnimation();
 
+		struct CustomColorSet
+		{
+			FLinearColor green;
+			FLinearColor yellow;
+			FLinearColor red;
+
+			CustomColorSet(): green(0.000607f, 0.973445f, 0.006995f, 1.0f),
+		  yellow(0.973445f, 0.973445f, 0.006995f, 1.0f),
+		  red(0.973445f, 0.000607f, 0.006995f, 1.0f){}
+		};
+
+		CustomColorSet ColorSet;
+	
 	protected:
 	virtual int32 OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;
 };

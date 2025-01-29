@@ -13,7 +13,6 @@ void SHealthBarWidget::Construct (const FArguments& InArgs)
 {
 	
 	InitializeTextures();
-	
 
 	progressBarStyle = FProgressBarStyle()
 			.SetBackgroundImage(FSlateNoResource())
@@ -27,45 +26,42 @@ void SHealthBarWidget::Construct (const FArguments& InArgs)
 	shakeAnimation = FCurveSequence();
 	//0초 지연, 0.5초 지속, 부드럽게 진동
 	shakeCurve = shakeAnimation.AddCurve(0.0f, 0.5f, ECurveEaseFunction::QuadInOut);
-	
+
 	ChildSlot
 	[
 		SNew(SConstraintCanvas)
-		+SConstraintCanvas::Slot()
-		.Anchors(FAnchors(0.0f, 0.0f, 1.0f, 1.0f))
-		.Alignment(FVector2D(0.0f,0.0f))
+		+ SConstraintCanvas::Slot()
+		.Anchors(FAnchors(0.015f, 0.04f, 0.615f, 0.64f)) // 비율로 위치와 크기 설정
+		.Alignment(FVector2D(0.0f, 0.0f)) // 좌상단 정렬
 		[
-			//cross icon image
 			SNew(SOverlay)
-			+SOverlay::Slot()
+			+ SOverlay::Slot()
 			[
 				SNew(SImage)
 				.Image(&bgBrush)
 			]
 		]
-	
-		+SConstraintCanvas::Slot()
-		.Anchors(FAnchors(0.0f, 0.0f)) // 프로그래스 바 위치 설정 (좌상단 기준)
-		.Alignment(FVector2D(0.0f, 0.0f)) // 좌상단 정렬
-		.Offset(FMargin(300, 72, 485, 75))
+
+		+ SConstraintCanvas::Slot()
+		.Anchors(FAnchors(0.1f, 0.052f, 0.3f, 0.145f)) // 비율 기반 ProgressBar 설정
+		.Alignment(FVector2D(0.0f, 0.0f))
 		[
 			SAssignNew(healthProgressBar, SProgressBar)
 			.Style(&progressBarStyle)
 			.BarFillType(EProgressBarFillType::LeftToRight)
 			.Percent(currPercent)
+			.FillColorAndOpacity(ColorSet.green)
 		]
-	
-		//stroke image
-		+SConstraintCanvas::Slot()
-		.Anchors(FAnchors(0.0f, 0.0f)) // 좌측 상단 기준
-		.Alignment(FVector2D(0.0f, 0.0f)) // 좌측 상단 정렬
-		.Offset(FMargin(290, 65, 505, 95)) // ProgressBar 위치와 동일
+
+		+ SConstraintCanvas::Slot()
+		.Anchors(FAnchors(0.1, 0.05f, 0.3f, 0.15f)) // 비율 기반 Stroke 설정
+		.Alignment(FVector2D(0.0f, 0.0f))
 		[
 			SAssignNew(strokeImage, SImage)
 			.Image(&strokeBrush)
 		]
 	];
-	
+
 }
 
 void SHealthBarWidget::UpdateHealth (float currHP, float targetHP)
@@ -125,7 +121,7 @@ int32 SHealthBarWidget::OnPaint(const FPaintArgs& Args, const FGeometry& Allotte
 
 		if(currPercent <= 0.35f && strokeImage.IsValid())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("stroke image 흔들림"));
+			// UE_LOG(LogTemp, Warning, TEXT("stroke image 흔들림"));
 			strokeImage->SetRenderTransform(FSlateRenderTransform(strokeShakeOffset));
 		}
 		
@@ -160,21 +156,21 @@ FLinearColor SHealthBarWidget::GetFillColor (float percent)
 {
 	if (percent >= 0.5f)
 	{
-		return FLinearColor::Green;
+		return ColorSet.green;
 	}
-	else if (percent >= 0.25f && percent < 0.5f)
+	else if (percent >= 0.25f)
 	{
-		return FLinearColor::Yellow;
+		return ColorSet.yellow;
 	}
-	else // health / defaultHealth < 0.25f
+	else
 	{
-		return FLinearColor::Red;
+		return ColorSet.red;
 	}
 }
 
 void SHealthBarWidget::InitializeTextures ()
 {
-	const FString progressBGTextPath = TEXT("/Game/Assets/HUD/HP/HUD_HP_BarFill_alpha");
+	const FString progressBGTextPath = TEXT("/Game/Assets/HUD/HP/HUD_HP_BarFill_alpha_white2");
 	UTexture2D* pgBGTex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *progressBGTextPath));
 	if(pgBGTex)
 	{
