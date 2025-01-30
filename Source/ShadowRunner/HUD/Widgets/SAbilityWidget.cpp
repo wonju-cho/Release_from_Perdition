@@ -94,6 +94,7 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 	                [
 	                    SAssignNew(dashBGImage, SImage)
 	                    .Image(&AbilityTextures.dashBGBrush)
+	                    .Visibility(EVisibility::Hidden)
 	                ]
 
 	                +SOverlay::Slot()
@@ -105,15 +106,16 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 	                    [
 	                        SAssignNew(dashIconImage, SImage)
 	                        .Image(&AbilityTextures.dashIconBrush)
+	                        .Visibility(EVisibility::Hidden)
 	                    ]
 	                ]
 	            ]
 	            +SVerticalBox::Slot()
 	            .AutoHeight()
-	            
 	            [
 	                SAssignNew(dashButtonImage, SImage)
 	                .Image(&AbilityTextures.dashButtonBrush)
+	                .Visibility(EVisibility::Hidden)
 	            ]
 	        ]
 	    ]
@@ -123,18 +125,12 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 
 void SAbilityWidget::UpdateAbilities (AShadowRunnerCharacter* player)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("Dash Visibility: %s"), player->bDashGained ? TEXT("Visible") : TEXT("Hidden"));
-	if (player->bDashGained)
+	 UE_LOG(LogTemp, Warning, TEXT("Dash Visibility: %s"), player->bDashGained ? TEXT("Visible") : TEXT("Hidden"));
+	if (player->bDashGained == true)
 	{
 		dashBGImage->SetVisibility(EVisibility::Visible);
 		dashButtonImage->SetVisibility(EVisibility::Visible);
 		dashIconImage->SetVisibility(EVisibility::Visible);
-	}
-	else
-	{
-		dashBGImage->SetVisibility(EVisibility::Hidden);
-		dashButtonImage->SetVisibility(EVisibility::Hidden);
-		dashIconImage->SetVisibility(EVisibility::Hidden);
 	}
 }
 

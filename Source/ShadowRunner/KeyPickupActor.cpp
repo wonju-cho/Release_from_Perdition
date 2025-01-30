@@ -6,6 +6,7 @@
 #include "ShadowRunnerCharacter.h"
 #include "FirstDoorActor.h"
 #include "ShadowRunnerHUD.h"
+#include "ShadowRunnerSlateHUD.h"
 #include "Containers/UnrealString.h"
 
 extern float volumeControlEnemy;
@@ -86,11 +87,12 @@ void AKeyPickupActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 							}
 
 							// Display text on screen.
-							AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-							if (shadowRunnerHUD)
-							{
-								shadowRunnerHUD->DisplayUnlocked();
-							}
+							player->GetHUD()->DisplayUnlocked();
+							// AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+							// if (shadowRunnerHUD)
+							// {
+							// 	shadowRunnerHUD->DisplayUnlocked();
+							// }
 						}
 					}
 				}

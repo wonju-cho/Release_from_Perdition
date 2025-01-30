@@ -30,7 +30,6 @@
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/FUIManager.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SAmmoWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SAmmoWidget.h" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SHealthBarWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SHealthBarWidget.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HealthBarWidget.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HealthComponent.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -43,7 +42,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="Toolset" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2MzlCRfrNItXq8Xmw47NxcUW8qi" />
   <component name="ProjectViewState">
@@ -54,6 +53,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;ToolWindowBuild.ShowToolbar&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.9335443&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -334,7 +334,8 @@
       <workItem from="1738166502894" duration="644000" />
       <workItem from="1738168451856" duration="594000" />
       <workItem from="1738169906283" duration="5626000" />
-      <workItem from="1738213429246" duration="19664000" />
+      <workItem from="1738213429246" duration="24511000" />
+      <workItem from="1738243821344" duration="7375000" />
     </task>
     <servers />
   </component>

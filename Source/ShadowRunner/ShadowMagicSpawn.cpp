@@ -3,8 +3,7 @@
 
 #include "ShadowMagicSpawn.h"
 #include "Engine/EngineTypes.h"
-//#include "RenderActor.h"
-//#include "UObject/UObjectGlobals.h"
+#include "ShadowRunnerSlateHUD.h"
 
 extern int arenaDie;
 int magicMax = 0;
@@ -129,7 +128,7 @@ void AShadowMagicSpawn::Tick(float DeltaTime)
 
 
 				countingWave++;
-				AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+				AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 				shadowRunnerHUD->UpdateWaveSystem(countingWave);
 			}
 		}
@@ -167,7 +166,7 @@ void AShadowMagicSpawn::Tick(float DeltaTime)
 
 				this->SpawnObject();
 
-				AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+				AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 				shadowRunnerHUD->UpdateWaveSystem(countingWave);
 
 				once = false;
@@ -203,7 +202,7 @@ void AShadowMagicSpawn::Tick(float DeltaTime)
 				first = false;
 
 				countingWave++;
-				AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+				AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 				shadowRunnerHUD->UpdateWaveSystem(countingWave);
 			}
 		}

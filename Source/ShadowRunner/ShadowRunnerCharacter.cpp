@@ -157,10 +157,10 @@ AShadowRunnerCharacter::AShadowRunnerCharacter()
 	jumpNumber = 1;
 
 	// Survive time.
-	surviveTime = 0.0f;
-	surviveTimeSec = 0.0f;
-	surviveTimeMin = 0;
-	surviveTimeHour = 0;
+	// surviveTime = 0.0f;
+	// surviveTimeSec = 0.0f;
+	// surviveTimeMin = 0;
+	// surviveTimeHour = 0;
 	checkPointcheck = false;
 	WalkSoundCoolDown = 0.f;
 
@@ -943,15 +943,16 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 		WalkSoundCoolDown -= DeltaTime;
 	}
 
-	// Timer.
-	surviveTime = this->GetGameTimeSinceCreation(); // in second.
-	// Convert to hh:mm:ss.00
-	surviveTimeHour = (int32)(surviveTime / (60 * 60));
-	surviveTime -= surviveTimeHour * (60 * 60);
-	surviveTimeMin = (int32)(surviveTime / 60);
-	surviveTime -= surviveTimeMin * 60;
-	surviveTimeSec = surviveTime;
-	cachedHUD->UpdateTimer(surviveTimeHour, surviveTimeMin, surviveTimeSec);
+	// 	// Timer.
+	// 	surviveTime = this->GetGameTimeSinceCreation(); // in second.
+	// 	// Convert to hh:mm:ss.00
+	// 	surviveTimeHour = (int32)(surviveTime / (60 * 60));
+	// 	surviveTime -= surviveTimeHour * (60 * 60);
+	// 	surviveTimeMin = (int32)(surviveTime / 60);
+	// 	surviveTime -= surviveTimeMin * 60;
+	// 	surviveTimeSec = surviveTime;
+	// 	cachedHUD->UpdateTimer(surviveTimeHour, surviveTimeMin, surviveTimeSec);
+	// }
 }
 
 bool AShadowRunnerCharacter::GetShadowActive ()

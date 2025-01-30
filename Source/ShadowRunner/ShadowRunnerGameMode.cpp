@@ -4,6 +4,7 @@
 #include "ShadowRunnerCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "KeyPickupActor.h"
+#include "ShadowRunnerHUD.h"
 #include "ShadowRunnerSlateHUD.h"
 
 AShadowRunnerGameMode::AShadowRunnerGameMode()
@@ -14,7 +15,6 @@ AShadowRunnerGameMode::AShadowRunnerGameMode()
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 
 	// use our custom HUD class
-	//HUDClass = AShadowRunnerHUD::StaticClass();
 	HUDClass = AShadowRunnerSlateHUD::StaticClass();
 }
 

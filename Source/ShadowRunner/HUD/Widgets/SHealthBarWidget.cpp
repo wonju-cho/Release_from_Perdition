@@ -76,9 +76,12 @@ void SHealthBarWidget::UpdateHealth (float currHP, float targetHP)
 		healthProgressBar->SetFillColorAndOpacity(GetFillColor(currPercent));
 		healthProgressBar->SetPercent(currPercent);
 
-		StartShakeAnimation();
+		if (healthProgressBar.IsValid())
+		{
+			StartShakeAnimation();
+			Invalidate(EInvalidateWidgetReason::Paint);
+		}
 		
-		Invalidate(EInvalidateWidgetReason::Paint);
 	}
 }
 
@@ -94,6 +97,13 @@ int32 SHealthBarWidget::OnPaint(const FPaintArgs& Args, const FGeometry& Allotte
 	const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId,
 	const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const
 {
+	
+	if (!healthProgressBar.IsValid() || !strokeImage.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("Invalid healthProgressBar or strokeImage!"));
+		return LayerId; // 오류가 발생하지 않도록 바로 반환
+	}
+	
 	// 기본 페인팅을 먼저 수행
 	LayerId = SCompoundWidget::OnPaint(
 		Args,
@@ -128,9 +138,18 @@ int32 SHealthBarWidget::OnPaint(const FPaintArgs& Args, const FGeometry& Allotte
 		// 오프셋만 적용한 새로운 transform 생성
 		if(healthProgressBar.IsValid())
 		{
-			healthProgressBar->SetRenderTransform(
-				FSlateRenderTransform(shakeOffset)
-			);
+			if (healthProgressBar.Get() == nullptr)
+			{
+				UE_LOG(LogTemp, Error, TEXT("healthProgressBar is null!"));
+			}
+			else
+			{
+				healthProgressBar->SetRenderTransform(FSlateRenderTransform(shakeOffset));
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("healthProgressBar is invalid!"));
 		}
 	}
 	else

@@ -29,11 +29,3 @@ void AShadowrunnerController::Tick(float dt)
 {
 	Super::Tick(dt);
 }
-
-void AShadowrunnerController::SetupInputComponent(class UInputComponent* PlayerInputComponent)
-{
-	Super::SetupInputComponent();
-
-	check(PlayerInputComponent);
-}
-

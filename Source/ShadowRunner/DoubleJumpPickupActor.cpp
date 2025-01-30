@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "ShadowRunnerCharacter.h"
 #include "ShadowRunnerHUD.h"
-
+#include "ShadowRunnerSlateHUD.h"
 
 extern float volumeControlEnemy;
 // Sets default values
@@ -68,8 +68,7 @@ void ADoubleJumpPickupActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp,
 			player->jumpNumber = 2;
 
 			// Update HUD.
-			AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			shadowRunnerHUD->UpdateAbilities(player);
+			player->GetHUD()->UpdateAbilities(player);
 			if (AbilityPickupSound != nullptr)
 			{
 				UGameplayStatics::PlaySoundAtLocation(this, AbilityPickupSound, GetActorLocation(), volumeControlEnemy * 0.5f);

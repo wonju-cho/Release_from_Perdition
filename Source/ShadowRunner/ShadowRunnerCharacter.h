@@ -281,18 +281,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		int jumpNumber;
 
-	// Timer variables.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Timer)
-		float surviveTime;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Timer)
-		float surviveTimeSec;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Timer)
-		int32 surviveTimeMin;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Timer)
-		int32 surviveTimeHour;
+	// // Timer variables.
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Timer)
+	// 	float surviveTime;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Timer)
+	// 	float surviveTimeSec;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Timer)
+	// 	int32 surviveTimeMin;
+	//
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Timer)
+	// 	int32 surviveTimeHour;
 
 	FRotator respawnFacing;
 

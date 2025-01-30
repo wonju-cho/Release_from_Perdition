@@ -103,5 +103,5 @@ private:
 	class ULifeSystemWidget* LifeSystemWidget;
 	class UWaveSystemWidget* WaveSystemWidget;
 	class UPlayerOnHitWidget* PlayerOnHitWidget;
-  class UPlayerLowHealthWidget* PlayerLowHealthWidget;
+	class UPlayerLowHealthWidget* PlayerLowHealthWidget;
 };

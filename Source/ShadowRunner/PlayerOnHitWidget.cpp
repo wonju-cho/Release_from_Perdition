@@ -3,7 +3,6 @@
 
 #include "PlayerOnHitWidget.h"
 #include "Runtime/UMG/Public/UMG.h"
-//#include "ShadowRunnerHUD.h"
 
 UPlayerOnHitWidget::UPlayerOnHitWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -23,7 +22,6 @@ void UPlayerOnHitWidget::NativeConstruct()
 
 void UPlayerOnHitWidget::UpdatePlayerOnHitWidget(bool justgothit, float deltatime)
 {
-	
 	if (justgothit == true)
 	{
 		RedBorderImage->SetRenderOpacity(1);

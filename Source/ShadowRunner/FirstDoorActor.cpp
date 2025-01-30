@@ -3,9 +3,8 @@
 
 #include "FirstDoorActor.h"
 #include "DrawDebugHelpers.h"
-#include "UObject/ConstructorHelpers.h"
+#include "ShadowRunnerSlateHUD.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/BoxComponent.h"
 #include "ShadowMonsterSpwan.h"
 #include "ShadowRunnerCharacter.h"
 #include "Components/ArrowComponent.h"
@@ -114,7 +113,7 @@ void AFirstDoorActor::ToggleDoor(FVector characterFacing)
 	}
 	else // Door locked.
 	{
-		AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+		AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 		if (shadowRunnerHUD)
 		{
 			shadowRunnerHUD->DisplayLocked();

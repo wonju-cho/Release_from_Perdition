@@ -41,7 +41,6 @@ public:
 
 	////////////////////////////////////////////////////
 	virtual void Tick(float dt) override;
-	virtual void SetupInputComponent(class UInputComponent* PlayerInputComponent);
 	////////////////////////////////
 	
 };

@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "ShadowRunnerCharacter.h"
+#include "ShadowRunnerSlateHUD.h"
 #include "UObject/Object.h"
 #include "GameFramework/Controller.h"
 #include "Engine/EngineTypes.h"
@@ -107,7 +108,7 @@ void AShadowFlyEnemySpawn::Tick(float DeltaTime)
 				first = false;
 
 				countingWave++;
-				AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+				AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 				shadowRunnerHUD->UpdateWaveSystem(countingWave);
 			}
 		}
@@ -149,7 +150,7 @@ void AShadowFlyEnemySpawn::Tick(float DeltaTime)
 
 				this->SpawnObject();
 
-				AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+				AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 				shadowRunnerHUD->UpdateWaveSystem(countingWave);
 
 				once = false;

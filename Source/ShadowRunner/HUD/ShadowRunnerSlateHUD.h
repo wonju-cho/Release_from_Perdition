@@ -22,6 +22,8 @@ public:
 
 	virtual void BeginPlay() override;
 
+	virtual void BeginDestroy() override;
+
 	UFUNCTION()
 	void UpdateAmmo(int32 equipped, int32 unequipped, int32 defaultAmmo, int32 currentWeapon);
 
@@ -35,10 +37,10 @@ public:
 	void UpdateShadowSpawnCooldown(float currentTimer, float cooldownTime);
 
 	UFUNCTION()
-	void UpdateAbilities(class AShadowRunnerCharacter* player);
+	void UpdateAbilities(AShadowRunnerCharacter* player);
 
-	UFUNCTION()
-	void UpdateTimer(int32 hour, int32 min, float sec);
+	// UFUNCTION()
+	// void UpdateTimer(int32 hour, int32 min, float sec);
 
 	UFUNCTION()
 	void DisplayLocked();
@@ -49,8 +51,8 @@ public:
 	// UFUNCTION()
 	// 	void UpdateLifeSystem(int lifes);
 	//
-	// UFUNCTION()
-	// 	void UpdateWaveSystem(int waves);
+	UFUNCTION()
+		void UpdateWaveSystem(int waves);
 
 	UFUNCTION()
 		void UpdatePlayerOnHitEffect(bool justgothit, float deltatime);
@@ -74,12 +76,20 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Widgets")
 	TSubclassOf<UUserWidget> ShadowSpawnCooldownWidgetClass;
 	
+	// UPROPERTY(EditAnywhere, Category = "Widgets")
+	// TSubclassOf<UUserWidget> TimerWidgetClass;
+	
 	UPROPERTY(EditAnywhere, Category = "Widgets")
-	TSubclassOf<UUserWidget> TimerWidgetClass;
+	TSubclassOf<UUserWidget> WaveSystemWidgetClass;
 private:
 	/** Crosshair asset pointer */
 	UTexture2D* CrosshairTex;
+	
+	int32 HealthBarRetryCount = 0; // 최대 재시도 횟수 추적
+	const int32 MaxHealthBarRetries = 5; // 최대 5번 시도 후 중단
 
+	FTimerHandle HealthBarTimerHandle;
+	
 	/*slate ui들*/
 	TSharedPtr<SAmmoWidget> AmmoWidget;
 	TSharedPtr<SHealthBarWidget> HealthBarWidget;
@@ -90,7 +100,8 @@ private:
 	class UPlayerLowHealthWidget* PlayerLowHealthWidget;
 	class UShadowCooldownWidget* ShadowCooldownWidget;
 	class UShadowSpawnCooldownWidget* ShadowSpawnCooldownWidget;
-	class UTimerWidget* TimerWidget;
+	//class UTimerWidget* TimerWidget;
+	class UWaveSystemWidget* WaveSystemWidget;
 	
 	void InitializeHealthBarWidget();
 

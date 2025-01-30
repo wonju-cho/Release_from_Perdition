@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "ShadowRunnerCharacter.h"
+#include "ShadowRunnerSlateHUD.h"
 #include "UObject/Object.h"
 #include "GameFramework/Controller.h"
 #include "Engine/EngineTypes.h"
@@ -157,7 +158,7 @@ void AShadowMonsterSpwan::Tick(float DeltaTime)
 				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("y cor: %d"), first));
 
 				countingWave++;
-				AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+				AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 				shadowRunnerHUD->UpdateWaveSystem(countingWave);
 			}
 		}
@@ -199,7 +200,7 @@ void AShadowMonsterSpwan::Tick(float DeltaTime)
 
 				this->SpawnObject();
 
-				AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+				AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 				shadowRunnerHUD->UpdateWaveSystem(countingWave);
 
 				once = false;
@@ -273,7 +274,7 @@ void AShadowMonsterSpwan::Tick(float DeltaTime)
 				//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("y cor: %d"), first));
 
 				countingWave++;
-				AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+				AShadowRunnerSlateHUD* shadowRunnerHUD = Cast<AShadowRunnerSlateHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
 				shadowRunnerHUD->UpdateWaveSystem(countingWave);
 			}
 		}
