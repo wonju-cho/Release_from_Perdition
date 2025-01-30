@@ -14,7 +14,6 @@
 #include "Interactable_Cube1.h"
 #include "EnemyCharacter.h"
 #include "DestructiblePot.h"
-#include "ShadowRunnerSlateHUD.h"
 #include "Engine/GameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -31,6 +30,9 @@ class UAmmoComponent;
 class UHealthComponent;
 class ABaseWeapon;
 class AEnemyCharacter;
+class AShadowRunnerSlateHUD;
+
+DECLARE_DELEGATE_OneParam(FOnShadowActiveChanged, bool);
 
 UCLASS(config = Game)
 class AShadowRunnerCharacter : public ACharacter
@@ -130,6 +132,14 @@ protected:
 	virtual void Tick(float deltaTime);
 
 public:
+	UFUNCTION(BlueprintCallable)
+		bool GetShadowActive();
+	
+	FOnShadowActiveChanged& GetOnShadowActiveChanged();
+
+	UFUNCTION(BlueprintCallable)
+		void SetShadowActive(bool bActive);
+	
 	UFUNCTION(BlueprintCallable)
 		void Respawn();
 
@@ -248,9 +258,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		int lifes;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		bool shadowIsActive;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		bool bShadowIsOnCoolDown;
@@ -497,6 +504,10 @@ public:
 		class UParticleSystem* shadowExplodeParticles;
 
 private:
+	
+	FOnShadowActiveChanged OnShadowActiveChanged;
+	bool bIsShadowActive;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound", meta = (AllowPrivateAccess = "true"))
 		USoundBase* DistractionSound;
 

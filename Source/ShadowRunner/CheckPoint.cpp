@@ -17,7 +17,9 @@ ACheckPoint::ACheckPoint()
 	RootComponent = boxCollider;
 	
 	topMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("topMesh"));
-	topMesh->AttachTo(RootComponent);
+	//topMesh->AttachTo(RootComponent);
+	//attach to: deprecated -> SetUpAttachment
+	topMesh->SetupAttachment(RootComponent);
 
 	// Arrow component.
 	arrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
@@ -28,7 +30,7 @@ ACheckPoint::ACheckPoint()
 
 	rotationRate = FRotator(0.0f, 180.0f, 0.0f);
 
-	boxCollider->OnComponentBeginOverlap.AddDynamic(this, &ACheckPoint::OnOverlapBegin);
+	//boxCollider->OnComponentBeginOverlap.AddUniqueDynamic(this, &ACheckPoint::OnOverlapBegin);
 	//boxCollider->OnComponentEndOverlap.AddDynamic(this, &ACheckPoint::OnOverlapEnd);
 }
 
@@ -37,8 +39,20 @@ void ACheckPoint::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if(boxCollider)
+	{
+		boxCollider->OnComponentBeginOverlap.AddUniqueDynamic(this, &ACheckPoint::OnOverlapBegin);	
+	}
+}
 
-	boxCollider->OnComponentBeginOverlap.AddDynamic(this, &ACheckPoint::OnOverlapBegin);
+void ACheckPoint::EndPlay (const EEndPlayReason::Type EndPlayReason)
+{
+	if(boxCollider)
+	{
+		boxCollider->OnComponentBeginOverlap.RemoveDynamic(this, &ACheckPoint::OnOverlapBegin);
+	}
+	
+	Super::EndPlay(EndPlayReason);
 }
 
 // Called every frame
@@ -55,12 +69,15 @@ void ACheckPoint::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 
 	AShadowRunnerCharacter* PlayerCharacter = Cast<AShadowRunnerCharacter>(OtherActor);
 	
-	if (OtherActor->ActorHasTag("ShadowRunnerCharacter"))
+	if (PlayerCharacter && OtherActor->ActorHasTag("ShadowRunnerCharacter"))
 	{
 		PlayerCharacter->originMesh = GetActorLocation();
 
 		// Set respawn facing.
 		PlayerCharacter->respawnFacing = arrow->GetForwardVector().Rotation();
 	}
-
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OnOverlapBegin called, but PlayerCharacter is nullptr!"));
+	}
 }

@@ -6,8 +6,6 @@
 #include "Renderer/Private/ScenePrivate.h"
 #include "Widgets/Images/SImage.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
-#include "RHI.h"
-#include "RHIResources.h"
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 

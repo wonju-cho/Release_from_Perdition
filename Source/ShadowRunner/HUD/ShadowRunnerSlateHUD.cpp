@@ -13,6 +13,9 @@
 #include "PlayerOnHitWidget.h"
 #include "ShadowrunnerController.h"
 #include "PlayerLowHealthWidget.h"
+#include "ShadowCooldownWidget.h"
+#include "ShadowSpawnCooldownWidget.h"
+#include "TimerWidget.h"
 #include "UObject/ConstructorHelpers.h"
 #include "../AmmoWidget.h"
 #include "../ShadowRunnerCharacter.h"
@@ -50,6 +53,8 @@ void AShadowRunnerSlateHUD::BeginPlay()
 	//slate widget 초기화
 	if(GEngine && GEngine->GameViewport)
 	{
+		///////////
+		//AmmoWidget
 		SAssignNew(AmmoWidget, SAmmoWidget)
 		.equippedAmmo(10)
 		.unequippedAmmo(INFINITE);
@@ -57,6 +62,29 @@ void AShadowRunnerSlateHUD::BeginPlay()
 		//ammo widget 추가
 		GEngine->GameViewport->AddViewportWidgetContent(
 			SNew(SWeakWidget).PossiblyNullContent(AmmoWidget.ToSharedRef()));
+		///////////
+
+		///////////
+		//Ability Widget
+		AShadowRunnerCharacter* PlayerCharacter = Cast<AShadowRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		
+		SAssignNew(AbilityWidget, SAbilityWidget)
+		.bIsShadowActive(TAttribute<bool>::Create(
+		TAttribute<bool>::FGetter::CreateUObject(PlayerCharacter, &AShadowRunnerCharacter::GetShadowActive)
+		));
+
+		PlayerCharacter->GetOnShadowActiveChanged().BindLambda([this](bool bActive)
+		{
+			if(AbilityWidget.IsValid())
+			{
+				AbilityWidget->Invalidate(EInvalidateWidgetReason::Layout);
+			}
+		});
+
+		//Ability Widget 추가
+		GEngine->GameViewport->AddViewportWidgetContent(
+			SNew(SWeakWidget).PossiblyNullContent(AbilityWidget.ToSharedRef()));
+		///////////
 
 		SetHealthBarTimerInitialization();
 	}
@@ -121,6 +149,24 @@ void AShadowRunnerSlateHUD::InitializeUMGWidgets ()
 			PlayerLowHealthWidget->AddToViewport();
 		}
 	}
+
+	if (ShadowCooldownWidgetClass)
+	{
+		ShadowCooldownWidget = CreateWidget<UShadowCooldownWidget>(GetWorld(), ShadowCooldownWidgetClass);
+		if (ShadowCooldownWidget)
+		{
+			ShadowCooldownWidget->AddToViewport();
+		}
+	}
+
+	if (ShadowSpawnCooldownWidgetClass)
+	{
+		ShadowSpawnCooldownWidget = CreateWidget<UShadowSpawnCooldownWidget>(GetWorld(), ShadowSpawnCooldownWidgetClass);
+		if (ShadowSpawnCooldownWidget)
+		{
+			ShadowSpawnCooldownWidget->AddToViewport();
+		}
+	}
 }
 
 void AShadowRunnerSlateHUD::SetHealthBarTimerInitialization ()
@@ -139,6 +185,24 @@ void AShadowRunnerSlateHUD::UpdateHealth(float currHP, float targetHP)
 	}
 }
 
+void AShadowRunnerSlateHUD::UpdateShadowCooldown (float currentTimer, float cooldownTime)
+{
+	if (ShadowCooldownWidget)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("in shadowHUD, health is %f"), health));
+		ShadowCooldownWidget->UpdateShadowCooldown(currentTimer, cooldownTime);
+	}
+}
+
+void AShadowRunnerSlateHUD::UpdateShadowSpawnCooldown (float currentTimer, float cooldownTime)
+{
+	if (ShadowSpawnCooldownWidget)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("in shadowHUD, health is %f"), health));
+		ShadowSpawnCooldownWidget->UpdateShadowSpawnCooldown(currentTimer, cooldownTime);
+	}
+}
+
 void AShadowRunnerSlateHUD::UpdateAmmo (int32 equipped, int32 unequipped, int32 defaultAmmo, int32 currentWeapon)
 {
 	if(AmmoWidget.IsValid())
@@ -149,7 +213,19 @@ void AShadowRunnerSlateHUD::UpdateAmmo (int32 equipped, int32 unequipped, int32 
 
 void AShadowRunnerSlateHUD::UpdateAbilities(AShadowRunnerCharacter* player)
 {
-	
+	if(AbilityWidget.IsValid())
+	{
+		AbilityWidget->UpdateAbilities(player);	
+	}
+}
+
+void AShadowRunnerSlateHUD::UpdateTimer (int32 hour, int32 min, float sec)
+{
+	if (TimerWidgetClass)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("in shadowHUD, health is %f"), health));
+		TimerWidget->UpdateTimer(hour, min, sec);
+	}
 }
 
 void AShadowRunnerSlateHUD::DisplayLocked()
@@ -183,4 +259,3 @@ void AShadowRunnerSlateHUD::UpdatePlayerLowHealth(bool low)
 		PlayerLowHealthWidget->UpdatePlayerLowHealth(low);
 	}
 }
-

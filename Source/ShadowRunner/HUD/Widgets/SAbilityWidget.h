@@ -8,41 +8,44 @@
 /**
  * 
  */
+
+class AShadowRunnerCharacter;
+
 class SHADOWRUNNER_API SAbilityWidget: public SCompoundWidget
 {
 	public:
-		SLATE_BEGIN_ARGS(SAbilityWidget)
-			{
-			}
-
+		SLATE_BEGIN_ARGS(SAbilityWidget) {}
+			SLATE_ATTRIBUTE(bool, bIsShadowActive)
 		SLATE_END_ARGS()
 
-		/** Constructs this widget with InArgs */
-		void Construct (const FArguments& InArgs);
-
+	/** Constructs this widget with InArgs */
+	void Construct (const FArguments& InArgs);
+	
+	void UpdateAbilities(AShadowRunnerCharacter* player);
+	
 	private:
-	TAttribute<int32> equippedAmmo;
-	TAttribute<int32> unequippedAmmo;
+	TAttribute<bool> bIsShadowActive;
 
-	TSharedPtr<STextBlock> equippedAmmoText;
-	TSharedPtr<STextBlock> unequippedAmmoText;
-	TSharedPtr<SImage> equippedImage;
-	TSharedPtr<SImage> unequippedImage;
-	TSharedPtr<SImage> equippedAmmoImage;
-	TSharedPtr<SImage> unequippedAmmoImage;
-		
-	FText infiniteText = FText::FromString(TEXT("∞"));
+	TSharedPtr<SImage> dashBGImage;
+	TSharedPtr<SImage> dashButtonImage;
+	TSharedPtr<SImage> dashIconImage;
 
+	EVisibility GetShadowLeftBGVisibility() const;
+	EVisibility GetShadowRightBGVisibility() const;
+	
 	struct FAbilityTextureSet
 	{
-		FSlateBrush rifleBrush;
-		FSlateBrush pistolBrush;
-		FSlateBrush bigAmmoBrush;
-		FSlateBrush smallAmmoBrush;
-		FSlateBrush bgBrush;
+		FSlateBrush shadowButtonsBrush;
+		FSlateBrush shadowIconsBrush;
+		FSlateBrush shadowBGBrush;
+		FSlateBrush shadowLeftBGBrush;
+		FSlateBrush shadowRightBGBrush;
+		FSlateBrush dashButtonBrush;
+		FSlateBrush dashBGBrush;
+		FSlateBrush dashIconBrush;
 	};
 		
-	FAbilityTextureSet AmmoTextures;
+	FAbilityTextureSet AbilityTextures;
 		
 	void InitializeTextures();
 };

@@ -31,7 +31,7 @@ void UAbilitiesWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 
     AShadowRunnerCharacter* const player_ = Cast<AShadowRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
-    if (player_->shadowIsActive == true)
+    if (player_->GetShadowActive() == true)
     {
         BG_Shadow_Left->SetVisibility(ESlateVisibility::Hidden);
         BG_Shadow_Right->SetVisibility(ESlateVisibility::Visible);

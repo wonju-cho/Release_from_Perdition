@@ -3,6 +3,7 @@
 #pragma once 
 
 #include "CoreMinimal.h"
+#include "SAbilityWidget.h"
 #include "SAmmoWidget.h"
 #include "SHealthBarWidget.h"
 #include "GameFramework/HUD.h"
@@ -45,11 +46,11 @@ public:
 	UFUNCTION()
 	void DisplayUnlocked();
 
-	UFUNCTION()
-		void UpdateLifeSystem(int lifes);
-
-	UFUNCTION()
-		void UpdateWaveSystem(int waves);
+	// UFUNCTION()
+	// 	void UpdateLifeSystem(int lifes);
+	//
+	// UFUNCTION()
+	// 	void UpdateWaveSystem(int waves);
 
 	UFUNCTION()
 		void UpdatePlayerOnHitEffect(bool justgothit, float deltatime);
@@ -67,17 +68,29 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Widgets")
 	TSubclassOf<UUserWidget> PlayerLowHealthWidgetClass;
 	
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+	TSubclassOf<UUserWidget> ShadowCooldownWidgetClass;
+
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+	TSubclassOf<UUserWidget> ShadowSpawnCooldownWidgetClass;
+	
+	UPROPERTY(EditAnywhere, Category = "Widgets")
+	TSubclassOf<UUserWidget> TimerWidgetClass;
 private:
 	/** Crosshair asset pointer */
-	class UTexture2D* CrosshairTex;
+	UTexture2D* CrosshairTex;
 
 	/*slate ui들*/
 	TSharedPtr<SAmmoWidget> AmmoWidget;
 	TSharedPtr<SHealthBarWidget> HealthBarWidget;
+	TSharedPtr<SAbilityWidget> AbilityWidget;
 
 	class ULockUnlockWidget* LockUnlockWidget;
 	class UPlayerOnHitWidget* PlayerOnHitWidget;
 	class UPlayerLowHealthWidget* PlayerLowHealthWidget;
+	class UShadowCooldownWidget* ShadowCooldownWidget;
+	class UShadowSpawnCooldownWidget* ShadowSpawnCooldownWidget;
+	class UTimerWidget* TimerWidget;
 	
 	void InitializeHealthBarWidget();
 

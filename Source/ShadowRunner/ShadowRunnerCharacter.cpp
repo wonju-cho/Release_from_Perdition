@@ -124,7 +124,7 @@ AShadowRunnerCharacter::AShadowRunnerCharacter()
 	// Shadow clone variables.
 	spawnedActorRef = nullptr;
 
-	shadowIsActive = false;
+	bIsShadowActive = false;
 
 	//weapon
 	weapon = nullptr;
@@ -595,12 +595,14 @@ void AShadowRunnerCharacter::OnShadowSpawn()
 	if (spawnedActorRef) // Restore the shadow.
 	{
 		RestoreShadow();
+		SetShadowActive(false);
 	}
 	else
 	{
 		if (!bShadowSpawnIsOnCoolDown)
 		{
 			SpawnShadow();
+			SetShadowActive(true);
 
 			// Set cooldown flag to true.
 			bShadowSpawnIsOnCoolDown = true;
@@ -846,14 +848,14 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 		cachedHUD->UpdatePlayerOnHitEffect(false, DeltaTime);
 	}
 
-	if (spawnedActorRef == nullptr)
-	{
-		shadowIsActive = false;
-	}
-	else
-	{
-		shadowIsActive = true;
-	}
+	// if (spawnedActorRef == nullptr)
+	// {
+	// 	shadowIsActive = false;
+	// }
+	// else
+	// {
+	// 	shadowIsActive = true;
+	// }
 
 	// Update shadow swap cooldown timer.
 	if (bShadowIsOnCoolDown)
@@ -950,6 +952,23 @@ void AShadowRunnerCharacter::Tick(float DeltaTime)
 	surviveTime -= surviveTimeMin * 60;
 	surviveTimeSec = surviveTime;
 	cachedHUD->UpdateTimer(surviveTimeHour, surviveTimeMin, surviveTimeSec);
+}
+
+bool AShadowRunnerCharacter::GetShadowActive ()
+{
+	return bIsShadowActive;
+}
+
+FOnShadowActiveChanged& AShadowRunnerCharacter::GetOnShadowActiveChanged ()
+{
+	return OnShadowActiveChanged;
+}
+
+void AShadowRunnerCharacter::SetShadowActive (bool bActive)
+{
+	bIsShadowActive = bActive;
+
+	OnShadowActiveChanged.ExecuteIfBound(bIsShadowActive);
 }
 
 void AShadowRunnerCharacter::Respawn()

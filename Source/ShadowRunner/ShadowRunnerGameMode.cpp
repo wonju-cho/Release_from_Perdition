@@ -4,6 +4,7 @@
 #include "ShadowRunnerCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 #include "KeyPickupActor.h"
+#include "ShadowRunnerSlateHUD.h"
 
 AShadowRunnerGameMode::AShadowRunnerGameMode()
 	: Super()

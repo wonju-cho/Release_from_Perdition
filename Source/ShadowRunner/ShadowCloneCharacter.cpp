@@ -33,7 +33,6 @@ void AShadowCloneCharacter::BeginPlay()
 	{
 		pawnSensingComponent->OnSeePawn.AddDynamic(this, &AShadowCloneCharacter::OnEnemyDetected);
 	}
-
 }
 
 // Called every frame

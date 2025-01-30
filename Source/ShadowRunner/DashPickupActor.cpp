@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "ShadowRunnerCharacter.h"
 #include "ShadowRunnerHUD.h"
+#include "ShadowRunnerSlateHUD.h"
 
 extern float volumeControlEnemy;
 
@@ -71,8 +72,9 @@ void ADashPickupActor::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActo
 			player->bDashGained = true;
 
 			// Update HUD.
-			AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
-			shadowRunnerHUD->UpdateAbilities(player);
+			//AShadowRunnerHUD* shadowRunnerHUD = Cast<AShadowRunnerHUD>(GetWorld()->GetFirstPlayerController()->GetHUD());
+			//shadowRunnerHUD->UpdateAbilities(player);
+			player->GetHUD()->UpdateAbilities(player);
 			if (AbilityPickupSound != nullptr)
 			{
 				UGameplayStatics::PlaySoundAtLocation(this, AbilityPickupSound, GetActorLocation(), volumeControlEnemy * 0.7f);
