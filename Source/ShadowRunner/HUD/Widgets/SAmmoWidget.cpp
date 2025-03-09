@@ -2,6 +2,7 @@
 
 #include "SAmmoWidget.h"
 #include "SlateOptMacros.h"
+#include "UTextureManager.h"
 #include "Brushes/SlateImageBrush.h"
 #include "Renderer/Private/ScenePrivate.h"
 #include "Widgets/Images/SImage.h"
@@ -11,19 +12,19 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 void SAmmoWidget::Construct (const FArguments& InArgs)
 {
-	InitializeTextures();
-	
-	equippedAmmo = InArgs._equippedAmmo;
-	unequippedAmmo = InArgs._unequippedAmmo;
+	EquippedAmmo = InArgs._EquippedAmmo;
+	UnequippedAmmo = InArgs._UnequippedAmmo;
 
-	const FString fontPath = TEXT("/Game/Assets/Font/UnicaOne-Regular_Font.UnicaOne-Regular_Font");
-	UObject* fontObject = StaticLoadObject(UObject::StaticClass(), nullptr, *fontPath);
-	if (!fontObject)
+	const FString  FontPath   = TEXT("/Game/Assets/Font/UnicaOne-Regular_Font.UnicaOne-Regular_Font");
+	const UObject* FontObject = StaticLoadObject(UObject::StaticClass(), nullptr, *FontPath);
+	if (!FontObject)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("There is no font in the asset"));
 	}
 
 	const float shearY = 7.0f / 89.0f;
+
+	UUTextureManager* Instance = UUTextureManager::Get();
 
 	ChildSlot
 	[
@@ -38,7 +39,7 @@ void SAmmoWidget::Construct (const FArguments& InArgs)
 			+ SOverlay::Slot()
 			[
 				SNew(SImage)
-				.Image(&ammoTextures.bgBrush)
+				.Image(Instance->GetBrush(TextureKeys::GAmmoBg))
 			]
 
 			//equipped uis
@@ -63,9 +64,8 @@ void SAmmoWidget::Construct (const FArguments& InArgs)
 						.HAlign(HAlign_Center)
 						.VAlign(VAlign_Center)
 						[
-							SAssignNew(equippedImage, SImage)
-							.Image(&ammoTextures.rifleBrush)
-							
+							SAssignNew(EquippedImage, SImage)
+							.Image(Instance->GetBrush(TextureKeys::GRifle))
 						]
 					]
 					
@@ -80,15 +80,15 @@ void SAmmoWidget::Construct (const FArguments& InArgs)
 						.HAlign(HAlign_Right)
 						.VAlign(VAlign_Center)
 						[
-							SAssignNew(equippedAmmoText, STextBlock)
-							.Font(FSlateFontInfo(fontObject, 80))
+							SAssignNew(EquippedAmmoText, STextBlock)
+							.Font(FSlateFontInfo(FontObject, 80))
 							.Text_Lambda([this] ()
 							{
-								if (equippedAmmo.Get() == INFINITE)
+								if (EquippedAmmo.Get() == INFINITE)
 								{
 									return infiniteText;
 								}
-								return FText::FromString(FString::Printf(TEXT("%d"), equippedAmmo.Get()));
+								return FText::FromString(FString::Printf(TEXT("%d"), EquippedAmmo.Get()));
 							})
 							.RenderTransform(FSlateRenderTransform(FShear2D(0.0f, shearY))) //기울이기
 							.ColorAndOpacity(FSlateColor(FLinearColor(0.0f, 0.0f, 0.0f, 1.0f)))
@@ -106,8 +106,8 @@ void SAmmoWidget::Construct (const FArguments& InArgs)
 						.HAlign(HAlign_Right)
 						.VAlign(VAlign_Center)
 						[
-							SAssignNew(equippedAmmoImage, SImage)
-							.Image(&ammoTextures.bigAmmoBrush)
+							SAssignNew(EquippedAmmoImage, SImage)
+							.Image(Instance->GetBrush(TextureKeys::GBigAmmo))
 						]
 					]
 				]
@@ -135,8 +135,8 @@ void SAmmoWidget::Construct (const FArguments& InArgs)
 						.HAlign(HAlign_Center)
 						.VAlign(VAlign_Center)
 						[
-							SAssignNew(unequippedImage, SImage)
-							.Image(&ammoTextures.pistolBrush)
+							SAssignNew(UnequippedImage, SImage)
+							.Image(Instance->GetBrush(TextureKeys::GPistol))
 						]
 					]
 					
@@ -151,15 +151,15 @@ void SAmmoWidget::Construct (const FArguments& InArgs)
 						.HAlign(HAlign_Right)
 						.VAlign(VAlign_Center)
 						[
-							SAssignNew(unequippedAmmoText, STextBlock)
-							.Font(FSlateFontInfo(fontObject, 50))
+							SAssignNew(UnequippedAmmoText, STextBlock)
+							.Font(FSlateFontInfo(FontObject, 50))
 							.Text_Lambda([this] ()
 							{
-								if(unequippedAmmo.Get() == INFINITE)
+								if(UnequippedAmmo.Get() == INFINITE)
 								{
 									return infiniteText;
 								}
-								return FText::FromString(FString::Printf(TEXT("%d"), unequippedAmmo.Get()));
+								return FText::FromString(FString::Printf(TEXT("%d"), UnequippedAmmo.Get()));
 							})
 							.RenderTransform(FSlateRenderTransform(FShear2D(0.0f, shearY))) //기울이기
 							.ColorAndOpacity(FSlateColor(FLinearColor(0.0f, 0.0f, 0.0f, 1.0f)))
@@ -177,8 +177,8 @@ void SAmmoWidget::Construct (const FArguments& InArgs)
 						.HAlign(HAlign_Right)
 						.VAlign(VAlign_Center)
 						[
-							SAssignNew(unequippedAmmoImage, SImage)
-							.Image(&ammoTextures.smallAmmoBrush)
+							SAssignNew(UnequippedAmmoImage, SImage)
+							.Image(Instance->GetBrush(TextureKeys::GSmallAmmo))
 						]
 					]
 				]
@@ -192,71 +192,24 @@ void SAmmoWidget::UpdateAmmo (int32 equipped, int32 unequipped, int32 defaultAmm
 {
 	if(equipped >= 0 && defaultAmmo > 0)
 	{
-		equippedAmmo.Set(equipped);
-		unequippedAmmo.Set(unequipped);
+		EquippedAmmo.Set(equipped);
+		UnequippedAmmo.Set(unequipped);
 
+		UUTextureManager* Instance = UUTextureManager::Get();
 		if(currentWeapon == 0) //rifle
 		{
-			equippedImage->SetImage(&ammoTextures.rifleBrush);
-			equippedAmmoImage->SetImage(&ammoTextures.bigAmmoBrush);
-			unequippedImage->SetImage(&ammoTextures.pistolBrush);
-			unequippedAmmoImage->SetImage(&ammoTextures.smallAmmoBrush);
+			EquippedImage->SetImage(Instance->GetBrush(TextureKeys::GRifle));
+			EquippedAmmoImage->SetImage(Instance->GetBrush(TextureKeys::GBigAmmo));
+			UnequippedImage->SetImage(Instance->GetBrush(TextureKeys::GPistol));
+			UnequippedAmmoImage->SetImage(Instance->GetBrush(TextureKeys::GSmallAmmo));
 		}
 		else
 		{
-			equippedImage->SetImage(&ammoTextures.pistolBrush);
-			equippedAmmoImage->SetImage(&ammoTextures.smallAmmoBrush);
-			unequippedImage->SetImage(&ammoTextures.rifleBrush);
-			unequippedAmmoImage->SetImage(&ammoTextures.bigAmmoBrush);
+			EquippedImage->SetImage(Instance->GetBrush(TextureKeys::GPistol));
+			EquippedAmmoImage->SetImage(Instance->GetBrush(TextureKeys::GSmallAmmo));
+			UnequippedImage->SetImage(Instance->GetBrush(TextureKeys::GRifle));
+			UnequippedAmmoImage->SetImage(Instance->GetBrush(TextureKeys::GBigAmmo));
 		}
 	}
 }
-
-void SAmmoWidget::InitializeTextures ()
-{
-	const FString bgTextPath = TEXT("/Game/Assets/HUD/Weapons/HUD_Weapons_BG");
-	UTexture2D* bgTex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *bgTextPath));
-	if(bgTex)
-	{
-		ammoTextures.bgBrush = FSlateImageBrush(bgTex, FVector2D(1920.f, 1080.f));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to load rifle texture: %s"), *bgTextPath);
-	}
-
-	const FString rifleTextPath = TEXT("/Game/Assets/HUD/Weapons/HUD_Weapons_Rifle");
-	UTexture2D* rifleTex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *rifleTextPath));
-	FVector2D textureSize = FVector2D(rifleTex->GetSizeX(), rifleTex->GetSizeY());
-	if(rifleTex)
-	{
-		textureSize = FVector2D(rifleTex->GetSizeX(), rifleTex->GetSizeY());
-		ammoTextures.rifleBrush = FSlateImageBrush(rifleTex, textureSize);
-	}
-	
-	const FString pistolTextPath = TEXT("/Game/Assets/HUD/Weapons/HUD_Weapons_Pistol");
-	UTexture2D* pistolTex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *pistolTextPath));
-	if(pistolTex)
-	{
-		textureSize = FVector2D(pistolTex->GetSizeX(), pistolTex->GetSizeY());
-		ammoTextures.pistolBrush = FSlateImageBrush(pistolTex, textureSize);
-	}
-
-	const FString bigAmmoTextPath = TEXT("/Game/Assets/HUD/Weapons/HUD_Weapons_BigAmmo");
-	UTexture2D* bigAmmoTex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *bigAmmoTextPath));
-	if(bigAmmoTex)
-	{
-		textureSize = FVector2D(bigAmmoTex->GetSizeX(), bigAmmoTex->GetSizeY());
-		ammoTextures.bigAmmoBrush = FSlateImageBrush(bigAmmoTex, textureSize);
-	}
-
-	const FString smallAmmoPath = TEXT("/Game/Assets/HUD/Weapons/HUD_Weapons_SmallAmmo");
-	UTexture2D* smallAmmoTex = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *smallAmmoPath));
-	if(smallAmmoTex)
-	{
-		//textureSize = FVector2D(smallAmmoTex->GetSizeX(), smallAmmoTex->GetSizeY());
-		ammoTextures.smallAmmoBrush = FSlateImageBrush(smallAmmoTex, textureSize);
-	}
-}
-
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

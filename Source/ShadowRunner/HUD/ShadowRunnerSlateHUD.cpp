@@ -51,72 +51,74 @@ void AShadowRunnerSlateHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//slate widget 초기화
-	if(GEngine && GEngine->GameViewport)
+	if (GEngine && GEngine->GameViewport)
 	{
-		///////////
-		//AmmoWidget
-		SAssignNew(AmmoWidget, SAmmoWidget)
-		.equippedAmmo(10)
-		.unequippedAmmo(INFINITE);
-
-		//ammo widget 추가
-		if(AmmoWidget.IsValid())
-		{
-			GEngine->GameViewport->AddViewportWidgetContent(
-				SNew(SWeakWidget).PossiblyNullContent(AmmoWidget.ToSharedRef()));
-		}
-		///////////
-
-		///////////
-		// Ability Widget
-
-		AShadowRunnerCharacter* PlayerCharacter = Cast<AShadowRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-
-		SAssignNew(AbilityWidget, SAbilityWidget)
-		.bIsShadowActive(TAttribute<bool>::Create(
-			[PlayerCharacter]() -> bool
+		/////////
+		// Ammo Widget 생성
+		if (!AmmoWidget.IsValid()) // ✅ 중복 생성 방지
 			{
-				TWeakObjectPtr<AShadowRunnerCharacter> WeakPlayerCharacter = PlayerCharacter;
-				if (WeakPlayerCharacter.IsValid())
-				{
-					return WeakPlayerCharacter->GetShadowActive();
-				}
-				return false; // 안전한 기본값
+			SAssignNew(AmmoWidget, SAmmoWidget)
+				.EquippedAmmo(10)
+				.UnequippedAmmo(INFINITE);
 			}
-		));
-		
-		if (PlayerCharacter)
-		{
-			PlayerCharacter->GetOnShadowActiveChanged().BindLambda([this](bool bActive)
+
+		// Ammo Widget 추가
+		if (AmmoWidget.IsValid() && !bIsAmmoWidgetAdded) // ✅ 중복 추가 방지
 			{
-				if (AbilityWidget.IsValid())
+			// GEngine->GameViewport->AddViewportWidgetContent(
+			// 	SNew(SWeakWidget).PossiblyNullContent(AmmoWidget.ToSharedRef()));
+			//시도 1: 강한 참조
+			GEngine->GameViewport->AddViewportWidgetContent(AmmoWidget.ToSharedRef());
+
+			bIsAmmoWidgetAdded = true;
+			UE_LOG(LogTemp, Error, TEXT("Ammo Widget 생성!"));
+			}
+		/////////
+
+		/////////
+		// Ability Widget 생성
+		if (!AbilityWidget.IsValid()) // ✅ 중복 생성 방지
+			{
+			SAssignNew(AbilityWidget, SAbilityWidget);
+			}
+
+		// PlayerCharacter 가져오기
+		AShadowRunnerCharacter* PlayerCharacter = Cast<AShadowRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		TWeakObjectPtr<AShadowRunnerCharacter> WeakPlayerCharacter = PlayerCharacter;
+
+		if (WeakPlayerCharacter.IsValid())
+		{
+			TWeakPtr<SAbilityWidget> WeakAbilityWidget = AbilityWidget;
+
+			WeakPlayerCharacter->GetOnShadowActiveChanged().BindLambda([WeakAbilityWidget](bool bActive)
+			{
+				if (TSharedPtr<SAbilityWidget> PinnedWidget = WeakAbilityWidget.Pin())
 				{
-					AbilityWidget->Invalidate(EInvalidateWidgetReason::Layout);
+					PinnedWidget->Invalidate(EInvalidateWidgetReason::Layout);
 				}
 			});
 		}
 
 		// Ability Widget 추가
-		if (GEngine && GEngine->GameViewport)
-		{
-			if(AbilityWidget.IsValid())
+		if (AbilityWidget.IsValid() && !bIsAbilityWidgetAdded) // ✅ 중복 추가 방지
 			{
-				GEngine->GameViewport->AddViewportWidgetContent(
-					SNew(SWeakWidget).PossiblyNullContent(AbilityWidget.ToSharedRef()));	
-			}
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("GEngine or GameViewport is not ready!"));
-		}
-		/////
+			// GEngine->GameViewport->AddViewportWidgetContent(
+			// 	SNew(SWeakWidget).PossiblyNullContent(AbilityWidget.ToSharedRef()));
 
+			//시도 1: 강한 참조
+			GEngine->GameViewport->AddViewportWidgetContent(AbilityWidget.ToSharedRef());
+			
+			bIsAbilityWidgetAdded = true;
+			UE_LOG(LogTemp, Error, TEXT("Ability Widget 생성!"));
+			}
+
+		/////////
 		SetHealthBarTimerInitialization();
 	}
 
 	InitializeUMGWidgets();
 }
+
 
 void AShadowRunnerSlateHUD::BeginDestroy()
 {
@@ -126,24 +128,46 @@ void AShadowRunnerSlateHUD::BeginDestroy()
 	{
 		if (AmmoWidget.IsValid())
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Removing AmmoWidget"));
 			GEngine->GameViewport->RemoveViewportWidgetContent(AmmoWidget.ToSharedRef());
 			AmmoWidget.Reset();
 		}
 
 		if (HealthBarWidget.IsValid())
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Removing HealthBarWidget"));
 			GEngine->GameViewport->RemoveViewportWidgetContent(HealthBarWidget.ToSharedRef());
 			HealthBarWidget.Reset();
 		}
 
 		if (AbilityWidget.IsValid())
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Removing AbilityWidget"));
 			GEngine->GameViewport->RemoveViewportWidgetContent(AbilityWidget.ToSharedRef());
 			AbilityWidget.Reset();
 		}
 	}
 }
 
+void AShadowRunnerSlateHUD::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+
+	if (!AbilityWidget.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("⚠️ AbilityWidget이 Slate에서 사라짐 (PendingKill 가능)"));
+	}
+
+	if(!AmmoWidget.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("⚠️ AmmoWidget이 Slate에서 사라짐 (PendingKill 가능)"));
+	}
+
+	if(!HealthBarWidget.IsValid())
+	{
+		UE_LOG(LogTemp, Error, TEXT("⚠️ HealthBarWidget이 Slate에서 사라짐 (PendingKill 가능)"));
+	}
+}
 
 void AShadowRunnerSlateHUD::InitializeHealthBarWidget ()
 {
@@ -155,10 +179,10 @@ void AShadowRunnerSlateHUD::InitializeHealthBarWidget ()
 
 	AShadowrunnerController* playerController = Cast<AShadowrunnerController>(GetWorld()->GetFirstPlayerController());
 	if (!playerController) // PlayerController가 null이면 실행하지 않음
-		{
+	{
 		UE_LOG(LogTemp, Error, TEXT("PlayerController is null!"));
 		return;
-		}
+	}
 
 	AShadowRunnerCharacter* player = Cast<AShadowRunnerCharacter>(playerController->GetPawn());
 	if (!player) // PlayerCharacter가 null이면 실행하지 않음
@@ -182,13 +206,18 @@ void AShadowRunnerSlateHUD::InitializeHealthBarWidget ()
 	}
 
 	SAssignNew(HealthBarWidget, SHealthBarWidget)
-		.maxHP(player->GetHealthBar()->GetDefaultHealth());
+		.MaxHP(player->GetHealthBar()->GetDefaultHealth());
 
-	UE_LOG(LogTemp, Warning, TEXT("HealthBar Widget is created."));
+	UE_LOG(LogTemp, Warning, TEXT("HealthBar Widget 생성!"));
 
 	// HealthBar 위젯 추가
-	GEngine->GameViewport->AddViewportWidgetContent(
-		SNew(SWeakWidget).PossiblyNullContent(HealthBarWidget.ToSharedRef()));
+	// GEngine->GameViewport->AddViewportWidgetContent(
+	// 	SNew(SWeakWidget).PossiblyNullContent(HealthBarWidget.ToSharedRef()));
+
+	//시도 1: 강한 참조를 이용해 위젯을 추가하여 소멸되지 않도록 함
+	GEngine->GameViewport->AddViewportWidgetContent(HealthBarWidget.ToSharedRef());
+
+	HealthBarRetryCount = 0;
 }
 
 void AShadowRunnerSlateHUD::InitializeUMGWidgets ()

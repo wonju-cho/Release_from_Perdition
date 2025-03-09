@@ -15,29 +15,28 @@ class SHADOWRUNNER_API SHealthBarWidget: public SCompoundWidget
 {
 	public:
 		SLATE_BEGIN_ARGS(SHealthBarWidget) {}
-			SLATE_ARGUMENT(float, maxHP)
+			SLATE_ARGUMENT(float, MaxHP)
 		SLATE_END_ARGS()
 	
 		void Construct (const FArguments& InArgs);
 
 		void UpdateHealth (float currHP, float targetHP);
 
+	virtual void Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) override;
+	
 	private:
-		TSharedPtr<SProgressBar> healthProgressBar;
-		TSharedPtr<SImage> strokeImage;
-        FProgressBarStyle progressBarStyle;
-		FSlateBrush progressBGBrush;
-		FSlateBrush fillBrush;
-		// FSlateMaterialBrush* fillBrush;
-		FSlateBrush bgBrush;
-		FSlateBrush strokeBrush;
-
-		void InitializeTextures();
+		TSharedPtr<SProgressBar> HealthProgressBar;
+		TSharedPtr<SImage> StrokeImage;
+		FProgressBarStyle ProgressBarStyle;
 
 	private:
-		float progressTargetHP;
-		float currPercent;
-		TAttribute<float> maxHP;
+		float ProgressTargetHP;
+		float CurrPercent;
+
+		FVector2D CachedShakeOffset;
+		FVector2D CachedStrokeShakeOffset;
+	
+		TAttribute<float> MaxHP;
 
 		FLinearColor GetFillColor(float percent);
 		FCurveSequence shakeAnimation;

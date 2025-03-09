@@ -25,11 +25,15 @@
     <setting file="file://C:/Program Files/Epic Games/UE_4.26/Engine/Source/Runtime/Slate/Private/Widgets/Notifications/SProgressBar.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://C:/Program Files/Epic Games/UE_4.26/Engine/Source/Runtime/UMG/Public/Components/ProgressBar.h" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/AImagician/AIMagic.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/ShadowRunnerHUD.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/ShadowRunnerSlateHUD.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/ShadowRunnerSlateHUD.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/FUIManager.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/FUIManager.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SAbilityWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SAmmoWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SAmmoWidget.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SHealthBarWidget.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HUD/Widgets/SHealthBarWidget.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HealthBarWidget.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/HealthComponent.cpp" root0="FORCE_HIGHLIGHTING" />
@@ -37,6 +41,7 @@
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/ShadowRunnerCharacter.cpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/ShadowRunnerCharacter.h" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/ShadowrunnerController.cpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Source/ShadowRunner/ShadowrunnerController.h" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -335,7 +340,11 @@
       <workItem from="1738168451856" duration="594000" />
       <workItem from="1738169906283" duration="5626000" />
       <workItem from="1738213429246" duration="24511000" />
-      <workItem from="1738243821344" duration="7375000" />
+      <workItem from="1738243821344" duration="10227000" />
+      <workItem from="1740322138106" duration="3456000" />
+      <workItem from="1740930194119" duration="4297000" />
+      <workItem from="1741183386912" duration="1076000" />
+      <workItem from="1741529830828" duration="5858000" />
     </task>
     <servers />
   </component>

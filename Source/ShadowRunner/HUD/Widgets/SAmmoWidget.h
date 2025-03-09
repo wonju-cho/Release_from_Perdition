@@ -11,8 +11,8 @@ class SHADOWRUNNER_API SAmmoWidget: public SCompoundWidget
 {
 	public:
 		SLATE_BEGIN_ARGS(SAmmoWidget) {}
-			SLATE_ATTRIBUTE(int32, equippedAmmo)
-			SLATE_ATTRIBUTE(int32, unequippedAmmo)
+			SLATE_ATTRIBUTE(int32, EquippedAmmo)
+			SLATE_ATTRIBUTE(int32, UnequippedAmmo)
 		SLATE_END_ARGS()
 
 		/** Constructs this widget with InArgs */
@@ -21,28 +21,15 @@ class SHADOWRUNNER_API SAmmoWidget: public SCompoundWidget
 		void UpdateAmmo(int32 equipped, int32 unequipped, int32 defaultAmmo, int32 currentWeapon);
 
 	private:
-		TAttribute<int32> equippedAmmo;
-		TAttribute<int32> unequippedAmmo;
+		TAttribute<int32> EquippedAmmo;
+		TAttribute<int32> UnequippedAmmo;
 
-		TSharedPtr<STextBlock> equippedAmmoText;
-		TSharedPtr<STextBlock> unequippedAmmoText;
-		TSharedPtr<SImage> equippedImage;
-		TSharedPtr<SImage> unequippedImage;
-		TSharedPtr<SImage> equippedAmmoImage;
-		TSharedPtr<SImage> unequippedAmmoImage;
+		TSharedPtr<STextBlock> EquippedAmmoText;
+		TSharedPtr<STextBlock> UnequippedAmmoText;
+		TSharedPtr<SImage> EquippedImage;
+		TSharedPtr<SImage> UnequippedImage;
+		TSharedPtr<SImage> EquippedAmmoImage;
+		TSharedPtr<SImage> UnequippedAmmoImage;
 		
 		FText infiniteText = FText::FromString(TEXT("∞"));
-
-		struct FAmmoTextureSet
-		{
-			FSlateBrush rifleBrush;
-			FSlateBrush pistolBrush;
-			FSlateBrush bigAmmoBrush;
-			FSlateBrush smallAmmoBrush;
-			FSlateBrush bgBrush;
-		};
-		
-		FAmmoTextureSet ammoTextures;
-		
-		void InitializeTextures();
 };

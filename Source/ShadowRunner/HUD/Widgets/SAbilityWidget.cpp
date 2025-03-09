@@ -4,6 +4,7 @@
 
 #include "ShadowRunnerCharacter.h"
 #include "SlateOptMacros.h"
+#include "UTextureManager.h"
 #include "Brushes/SlateImageBrush.h"
 #include "Widgets/Images/SImage.h"
 #include "Widgets/Layout/SConstraintCanvas.h"
@@ -14,9 +15,9 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SAbilityWidget::Construct (const FArguments& InArgs)
 {
 	//바인딩
-	bIsShadowActive = InArgs._bIsShadowActive;
+	BIsShadowActive = InArgs._BIsShadowActive;
 
-	InitializeTextures();
+	UUTextureManager* Instance = UUTextureManager::Get();
 
 	ChildSlot
 	[
@@ -40,21 +41,21 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 	                +SOverlay::Slot()
 	                [
 	                    SNew(SImage)
-	                    .Image(&AbilityTextures.shadowBGBrush)
+	                    .Image(Instance->GetBrush(TextureKeys::GShadowBg))
 	                ]
 
 	                +SOverlay::Slot()
 	                [
 	                    SNew(SImage)
-	                    .Image(&AbilityTextures.shadowLeftBGBrush)
-	                    .Visibility(this, &SAbilityWidget::GetShadowLeftBGVisibility)
+	                    .Image(Instance->GetBrush(TextureKeys::GShadowLeftBg))
+	                    .Visibility(this, &SAbilityWidget::GetShadowLeftBgVisibility)
 	                ]
 
 	                +SOverlay::Slot()
 	                [
 	                    SNew(SImage)
-	                    .Image(&AbilityTextures.shadowRightBGBrush)
-	                    .Visibility(this, &SAbilityWidget::GetShadowRightBGVisibility)
+	                    .Image(Instance->GetBrush(TextureKeys::GShadowRightBg))
+	                    .Visibility(this, &SAbilityWidget::GetShadowRightBgVisibility)
 	                ]
 
 	                +SOverlay::Slot()
@@ -65,7 +66,7 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 	                    .Stretch(EStretch::ScaleToFit)
 	                    [
 	                        SNew(SImage)
-	                        .Image(&AbilityTextures.shadowIconsBrush)
+	                        .Image(Instance->GetBrush(TextureKeys::GShadowIcon))
 	                    ]
 	                ]
 	            ]
@@ -74,7 +75,7 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 	            .Padding(0.f, -20.f, 0.f, 0.f)
 	            [
 	                SNew(SImage)
-	                .Image(&AbilityTextures.shadowButtonsBrush)
+	                .Image(Instance->GetBrush(TextureKeys::GShadowButton))
 	                .RenderTransform(FSlateRenderTransform(FScale2D(0.9f, 0.9f))) // 크기를 50%로 축소
 					.RenderTransformPivot(FVector2D(0.5f, 0.5f)) // 중심점을 기준으로 스케일
 	            ]
@@ -92,8 +93,8 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 	                SNew(SOverlay)
 	                +SOverlay::Slot()
 	                [
-	                    SAssignNew(dashBGImage, SImage)
-	                    .Image(&AbilityTextures.dashBGBrush)
+	                    SAssignNew(DashBgImage, SImage)
+	                    .Image(Instance->GetBrush(TextureKeys::GDashBg))
 	                    .Visibility(EVisibility::Hidden)
 	                ]
 
@@ -104,8 +105,8 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 	                    SNew(SScaleBox)
 	                    .Stretch(EStretch::ScaleToFit)
 	                    [
-	                        SAssignNew(dashIconImage, SImage)
-	                        .Image(&AbilityTextures.dashIconBrush)
+	                        SAssignNew(DashIconImage, SImage)
+	                        .Image(Instance->GetBrush(TextureKeys::GDashIcon))
 	                        .Visibility(EVisibility::Hidden)
 	                    ]
 	                ]
@@ -113,8 +114,8 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 	            +SVerticalBox::Slot()
 	            .AutoHeight()
 	            [
-	                SAssignNew(dashButtonImage, SImage)
-	                .Image(&AbilityTextures.dashButtonBrush)
+	                SAssignNew(DashButtonImage, SImage)
+	                .Image(Instance->GetBrush(TextureKeys::GDashButton))
 	                .Visibility(EVisibility::Hidden)
 	            ]
 	        ]
@@ -128,51 +129,20 @@ void SAbilityWidget::UpdateAbilities (AShadowRunnerCharacter* player)
 	 UE_LOG(LogTemp, Warning, TEXT("Dash Visibility: %s"), player->bDashGained ? TEXT("Visible") : TEXT("Hidden"));
 	if (player->bDashGained == true)
 	{
-		dashBGImage->SetVisibility(EVisibility::Visible);
-		dashButtonImage->SetVisibility(EVisibility::Visible);
-		dashIconImage->SetVisibility(EVisibility::Visible);
+		DashBgImage->SetVisibility(EVisibility::Visible);
+		DashButtonImage->SetVisibility(EVisibility::Visible);
+		DashIconImage->SetVisibility(EVisibility::Visible);
 	}
 }
 
-EVisibility SAbilityWidget::GetShadowLeftBGVisibility () const
+EVisibility SAbilityWidget::GetShadowLeftBgVisibility () const
 {
-	return bIsShadowActive.Get() ? EVisibility::Hidden: EVisibility::Visible;
+	return BIsShadowActive.Get() ? EVisibility::Hidden: EVisibility::Visible;
 }
 
-EVisibility SAbilityWidget::GetShadowRightBGVisibility () const
+EVisibility SAbilityWidget::GetShadowRightBgVisibility () const
 {
-	return bIsShadowActive.Get() ? EVisibility::Visible: EVisibility::Hidden;
-}
-
-void SAbilityWidget::InitializeTextures ()
-{
-	TMap<FString, FSlateBrush*> TextureMap = {
-		{TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_Shadow_Buttons"), &AbilityTextures.shadowButtonsBrush},
-		{TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_IconsShadow_Crop"), &AbilityTextures.shadowIconsBrush},
-		{TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_BGShadow"), &AbilityTextures.shadowBGBrush},
-		{TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_BGShadow_Left"), &AbilityTextures.shadowLeftBGBrush},
-		{TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_BGShadow_Right"), &AbilityTextures.shadowRightBGBrush},
-		{TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_ButtonsDash"), &AbilityTextures.dashButtonBrush},
-		{TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_BGDash"), &AbilityTextures.dashBGBrush},
-		{TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_IconsDash"), &AbilityTextures.dashIconBrush},
-	};
-
-	for(const TPair<FString, FSlateBrush*>& TexturePair : TextureMap)
-	{
-		const FString& TexturePath = TexturePair.Key;
-		FSlateBrush* BrushPtr = TexturePair.Value;
-
-		UTexture2D* LoadedTexture = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, *TexturePath));
-		if (LoadedTexture)
-		{
-			FVector2D TextureSize(LoadedTexture->GetSizeX(), LoadedTexture->GetSizeY());
-			*BrushPtr = FSlateImageBrush(LoadedTexture, TextureSize);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("Failed to load texture: %s"), *TexturePath);
-		}
-	}
+	return BIsShadowActive.Get() ? EVisibility::Visible: EVisibility::Hidden;
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

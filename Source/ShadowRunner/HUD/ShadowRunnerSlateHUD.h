@@ -24,6 +24,7 @@ public:
 
 	virtual void BeginDestroy() override;
 
+	virtual void Tick(float DeltaSeconds) override;
 	UFUNCTION()
 	void UpdateAmmo(int32 equipped, int32 unequipped, int32 defaultAmmo, int32 currentWeapon);
 
@@ -83,6 +84,7 @@ public:
 	TSubclassOf<UUserWidget> WaveSystemWidgetClass;
 private:
 	/** Crosshair asset pointer */
+	UPROPERTY()
 	UTexture2D* CrosshairTex;
 	
 	int32 HealthBarRetryCount = 0; // 최대 재시도 횟수 추적
@@ -95,12 +97,27 @@ private:
 	TSharedPtr<SHealthBarWidget> HealthBarWidget;
 	TSharedPtr<SAbilityWidget> AbilityWidget;
 
+	bool bIsAmmoWidgetAdded = false;
+	bool bIsAbilityWidgetAdded = false;
+
+	UPROPERTY()
 	class ULockUnlockWidget* LockUnlockWidget;
+
+	UPROPERTY()
 	class UPlayerOnHitWidget* PlayerOnHitWidget;
+
+	UPROPERTY()
 	class UPlayerLowHealthWidget* PlayerLowHealthWidget;
+
+	UPROPERTY()
 	class UShadowCooldownWidget* ShadowCooldownWidget;
+
+	UPROPERTY()
 	class UShadowSpawnCooldownWidget* ShadowSpawnCooldownWidget;
+
 	//class UTimerWidget* TimerWidget;
+
+	UPROPERTY()
 	class UWaveSystemWidget* WaveSystemWidget;
 	
 	void InitializeHealthBarWidget();

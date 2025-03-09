@@ -15,7 +15,7 @@ class SHADOWRUNNER_API SAbilityWidget: public SCompoundWidget
 {
 	public:
 		SLATE_BEGIN_ARGS(SAbilityWidget) {}
-			SLATE_ATTRIBUTE(bool, bIsShadowActive)
+			SLATE_ATTRIBUTE(bool, BIsShadowActive)
 		SLATE_END_ARGS()
 
 	/** Constructs this widget with InArgs */
@@ -24,28 +24,13 @@ class SHADOWRUNNER_API SAbilityWidget: public SCompoundWidget
 	void UpdateAbilities(AShadowRunnerCharacter* player);
 	
 	private:
-	TAttribute<bool> bIsShadowActive;
+	TAttribute<bool> BIsShadowActive;
 
-	TSharedPtr<SImage> dashBGImage;
-	TSharedPtr<SImage> dashButtonImage;
-	TSharedPtr<SImage> dashIconImage;
+	TSharedPtr<SImage> DashBgImage;
+	TSharedPtr<SImage> DashButtonImage;
+	TSharedPtr<SImage> DashIconImage;
 
-	EVisibility GetShadowLeftBGVisibility() const;
-	EVisibility GetShadowRightBGVisibility() const;
-	
-	struct FAbilityTextureSet
-	{
-		FSlateBrush shadowButtonsBrush;
-		FSlateBrush shadowIconsBrush;
-		FSlateBrush shadowBGBrush;
-		FSlateBrush shadowLeftBGBrush;
-		FSlateBrush shadowRightBGBrush;
-		FSlateBrush dashButtonBrush;
-		FSlateBrush dashBGBrush;
-		FSlateBrush dashIconBrush;
-	};
-		
-	FAbilityTextureSet AbilityTextures;
-		
-	void InitializeTextures();
+	EVisibility GetShadowLeftBgVisibility() const;
+	EVisibility GetShadowRightBgVisibility() const;
+
 };
