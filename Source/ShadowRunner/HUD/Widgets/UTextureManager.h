@@ -38,6 +38,7 @@ public:
 
 	UUTextureManager();
 
+	UFUNCTION(BlueprintPure, Category = "TextureManager")
 	static UUTextureManager* Get();
 	
 	//텍스쳐 초기화
