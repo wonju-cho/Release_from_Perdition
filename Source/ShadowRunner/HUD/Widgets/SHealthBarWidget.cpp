@@ -39,7 +39,7 @@ void SHealthBarWidget::Construct (const FArguments& InArgs)
 			+ SOverlay::Slot()
 			[
 				SNew(SImage)
-				.Image(Instance->GetBrush(TextureKeys::GHPProgressBg))
+				.Image(Instance->GetBrush(TextureKeys::GHPCrossIcon))
 			]
 		]
 

@@ -6,9 +6,7 @@
 #include "Runtime/NavigationSystem/Public/NavigationSystem.h"
 #include "EnemyAIController.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType.h"
-#include "BehaviorTree/Blackboard/BlackboardKeyType_Vector.h"
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
-#include "GameFramework/Character.h"
 #include "ShadowCloneCharacter.h"
 #include "BlackBoardKeys.h"
 
@@ -24,9 +22,7 @@ EBTNodeResult::Type UFindShadowCloneLocation::ExecuteTask(UBehaviorTreeComponent
 
 	TArray<AActor*> targetPoints;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AShadowCloneCharacter::StaticClass(), targetPoints);
-
-
-	//if(bbKeys::CanSeePlayer && targetPoints.IsValidIndex(0))
+	
 	if(Controller->GetBlackBoard()->GetValueAsBool(bbKeys::CanSeeShadow) && targetPoints.IsValidIndex(0))
 	{
 		Controller->GetBlackBoard()->SetValueAsVector(bbKeys::ShadowLocation, targetPoints[0]->GetActorLocation());

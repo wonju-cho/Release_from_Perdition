@@ -14,15 +14,15 @@ UCLASS(Blueprintable)
 class SHADOWRUNNER_API UFindPlayerLocation : public UBTTask_BlackboardBase
 {
 	GENERATED_BODY()
-public:
-	UFindPlayerLocation(FObjectInitializer const& ObjectInitializer);
+	public:
+		UFindPlayerLocation(FObjectInitializer const& ObjectInitializer);
 
-	EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+		EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search", meta = (AllowAPrivateAccess = "true"))
+	protected:
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search", meta = (AllowAPrivateAccess = "true"))
 		bool SearchRandom = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search", meta = (AllowAPrivateAccess = "true"))
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search", meta = (AllowAPrivateAccess = "true"))
 		float SearchRadius = 150.0f;
 };

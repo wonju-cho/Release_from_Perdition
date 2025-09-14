@@ -51,10 +51,7 @@ EBTNodeResult::Type UFindPlayerLocation::ExecuteTask(UBehaviorTreeComponent& Own
 				Controller->GetBlackBoard()->SetValueAsVector(bbKeys::TargetLocation, Location.Location);
 
 				UAIBlueprintHelperLibrary::SimpleMoveToLocation(Controller, Controller->GetBlackBoard()->GetValueAsVector(bbKeys::TargetLocation));
-				
 			}
-			
-
 		}
 		PlayerLocation = Player->GetActorLocation();
 		Controller->GetBlackBoard()->SetValueAsVector(bbKeys::TargetLocation, PlayerLocation);

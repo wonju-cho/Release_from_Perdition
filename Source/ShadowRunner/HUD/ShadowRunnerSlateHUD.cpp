@@ -15,7 +15,6 @@
 #include "PlayerLowHealthWidget.h"
 #include "ShadowCooldownWidget.h"
 #include "ShadowSpawnCooldownWidget.h"
-#include "TimerWidget.h"
 #include "WaveSystemWidget.h"
 #include "UObject/ConstructorHelpers.h"
 #include "../AmmoWidget.h"
@@ -33,9 +32,9 @@ void AShadowRunnerSlateHUD::DrawHUD()
 {
 	Super::DrawHUD();
 
-	// Draw very simple crosshair
+	// Draw a very simple crosshair
 
-	// find center of the Canvas
+	// Find the center of the Canvas
 	const FVector2D Center(Canvas->ClipX * 0.5f, Canvas->ClipY * 0.5f);
 
 	// offset by half the texture's dimensions so that the center of the texture aligns with the center of the Canvas
@@ -55,7 +54,7 @@ void AShadowRunnerSlateHUD::BeginPlay()
 	{
 		/////////
 		// Ammo Widget 생성
-		if (!AmmoWidget.IsValid()) // ✅ 중복 생성 방지
+		if (!AmmoWidget.IsValid()) // 중복 생성 방지
 			{
 			SAssignNew(AmmoWidget, SAmmoWidget)
 				.EquippedAmmo(10)
@@ -63,7 +62,7 @@ void AShadowRunnerSlateHUD::BeginPlay()
 			}
 
 		// Ammo Widget 추가
-		if (AmmoWidget.IsValid() && !bIsAmmoWidgetAdded) // ✅ 중복 추가 방지
+		if (AmmoWidget.IsValid() && !bIsAmmoWidgetAdded) // 중복 추가 방지
 			{
 			// GEngine->GameViewport->AddViewportWidgetContent(
 			// 	SNew(SWeakWidget).PossiblyNullContent(AmmoWidget.ToSharedRef()));
@@ -77,15 +76,28 @@ void AShadowRunnerSlateHUD::BeginPlay()
 
 		/////////
 		// Ability Widget 생성
-		if (!AbilityWidget.IsValid()) // ✅ 중복 생성 방지
-			{
-			SAssignNew(AbilityWidget, SAbilityWidget);
-			}
 
 		// PlayerCharacter 가져오기
 		AShadowRunnerCharacter* PlayerCharacter = Cast<AShadowRunnerCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 		TWeakObjectPtr<AShadowRunnerCharacter> WeakPlayerCharacter = PlayerCharacter;
 
+		if (!AbilityWidget.IsValid()) // 중복 생성 방지
+		{
+			SAssignNew(AbilityWidget, SAbilityWidget)
+				   .BIsShadowActive(
+					   TAttribute<bool>::Create(
+						   TAttribute<bool>::FGetter::CreateLambda([WeakPlayerCharacter]()
+						   {
+							   if (WeakPlayerCharacter.IsValid())
+							   {
+								   return WeakPlayerCharacter->GetShadowActive(); // 캐릭터 상태를 직접 읽음
+							   }
+							   return false;
+						   })
+					   )
+				   );
+		}
+		
 		if (WeakPlayerCharacter.IsValid())
 		{
 			TWeakPtr<SAbilityWidget> WeakAbilityWidget = AbilityWidget;
@@ -100,7 +112,7 @@ void AShadowRunnerSlateHUD::BeginPlay()
 		}
 
 		// Ability Widget 추가
-		if (AbilityWidget.IsValid() && !bIsAbilityWidgetAdded) // ✅ 중복 추가 방지
+		if (AbilityWidget.IsValid() && !bIsAbilityWidgetAdded) // 중복 추가 방지
 			{
 			// GEngine->GameViewport->AddViewportWidgetContent(
 			// 	SNew(SWeakWidget).PossiblyNullContent(AbilityWidget.ToSharedRef()));

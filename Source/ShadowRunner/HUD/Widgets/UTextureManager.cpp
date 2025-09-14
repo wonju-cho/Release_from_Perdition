@@ -24,11 +24,14 @@ UUTextureManager* UUTextureManager::Get ()
 void UUTextureManager::LoadTextures ()
 {
 	static const TMap<FName, FString> TexturePaths = {
+		//총 위젯
 		{TextureKeys::GAmmoBg, TEXT("/Game/Assets/HUD/Weapons/HUD_Weapons_BG")},
 		{TextureKeys::GRifle, TEXT("/Game/Assets/HUD/Weapons/HUD_Weapons_Rifle")},
 		{TextureKeys::GPistol, TEXT("/Game/Assets/HUD/Weapons/HUD_Weapons_Pistol")},
 		{TextureKeys::GBigAmmo, TEXT("/Game/Assets/HUD/Weapons/HUD_Weapons_BigAmmo")},
 		{TextureKeys::GSmallAmmo, TEXT("/Game/Assets/HUD/Weapons/HUD_Weapons_SmallAmmo")},
+
+		//능력 위젯
 		{TextureKeys::GShadowButton, TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_Shadow_Buttons")},
 		{TextureKeys::GShadowIcon, TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_IconsShadow_Crop")},
 		{TextureKeys::GShadowBg, TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_BGShadow")},
@@ -37,6 +40,8 @@ void UUTextureManager::LoadTextures ()
 		{TextureKeys::GDashButton, TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_ButtonsDash")},
 		{TextureKeys::GDashBg, TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_BGDash")},
 		{TextureKeys::GDashIcon, TEXT("/Game/Assets/HUD/Abilities/CropImage/HUD_Abilities_IconsDash")},
+
+		//체력 위젯
 		{TextureKeys::GHPProgressBg, TEXT("/Game/Assets/HUD/HP/HUD_HP_BarFill_alpha_white2")},
 		{TextureKeys::GHPCrossIcon, TEXT("/Game/Assets/HUD/HP/HUD_HP_Cross")},
 		{TextureKeys::GHPBarStroke, TEXT("/Game/Assets/HUD/HP/HUD_HP_BarStroke_resize_alpha")},

@@ -22,6 +22,7 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 	ChildSlot
 	[
 	    SNew(SConstraintCanvas)
+		
 	    // Shadow UI 배치
 	    + SConstraintCanvas::Slot()
 	    .Anchors(FAnchors(0.03f, 0.95f)) // 비율 기반 좌측 하단 위치
@@ -126,7 +127,7 @@ void SAbilityWidget::Construct (const FArguments& InArgs)
 
 void SAbilityWidget::UpdateAbilities (AShadowRunnerCharacter* player)
 {
-	 UE_LOG(LogTemp, Warning, TEXT("Dash Visibility: %s"), player->bDashGained ? TEXT("Visible") : TEXT("Hidden"));
+	UE_LOG(LogTemp, Warning, TEXT("Dash Visibility: %s"), player->bDashGained ? TEXT("Visible") : TEXT("Hidden"));
 	if (player->bDashGained == true)
 	{
 		DashBgImage->SetVisibility(EVisibility::Visible);

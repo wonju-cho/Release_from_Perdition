@@ -115,8 +115,6 @@ private:
 	UPROPERTY()
 	class UShadowSpawnCooldownWidget* ShadowSpawnCooldownWidget;
 
-	//class UTimerWidget* TimerWidget;
-
 	UPROPERTY()
 	class UWaveSystemWidget* WaveSystemWidget;
 	

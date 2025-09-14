@@ -10,7 +10,6 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 #include "MotionControllerComponent.h"
-#include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 #include "AmmoComponent.h"
 #include "HealthComponent.h"
 #include "ShadowRunnerHUD.h"
@@ -35,7 +34,6 @@
 #include "ShadowRunnerSlateHUD.h"
 #include "Materials/MaterialParameterCollectionInstance.h"
 #include "Materials/MaterialParameterCollection.h"
-//#include "MediaAssets/Public/TimeSynchronizableMediaSource.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 

@@ -38,6 +38,4 @@ void UIsShadowInMeleeRange::OnBecomeRelevant(UBehaviorTreeComponent& OwnerComp, 
 	{
 		Controller->GetBlackBoard()->SetValueAsBool(bbKeys::ShadowIsInMeleeRange, false);
 	}
-
-
 }
