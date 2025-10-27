@@ -14,7 +14,8 @@
 - [기여 및 역할](#기여-및-역할) 
 
 ## 주요 기능
-![그림자 기능](./Images/shadow.gif)
+<video src="./Images/shadow.mp4" width="70%" autoplay loop muted playsinline title="그림자 기능"></video>
+
 + 그림자 기능
     + **소환**: 플레이어는 자신의 분신을 일정 거리 안에 소환시킬 수 있습니다.
     + **위치 변경**: ‘Q’키를 눌러 플레이어와 그림자의 위치를 변경할 수 있습니다.
@@ -22,8 +23,8 @@
 
 <table>
   <tr>
-    <td><img src="./Images/main_weapon.png" width="100%"></td>
-    <td><img src="./Images/rifle.png" width="100%"></td>
+    <td><img src="./Images/main_weapon.png" width="100%" title="주무기"></td>
+    <td><img src="./Images/rifle.png" width="100%" title="보조무기"></td>
   </tr>
 </table>
 
@@ -34,9 +35,9 @@
 
 <table>
   <tr>
-    <td><img src="./Images/melee.png" width="100%"></td>
-    <td><img src="./Images/magician.png" width="100%"></td>
-    <td><img src="./Images/flywing.png" width="100%"></td>
+    <td><img src="./Images/melee.png" width="100%" title="근거리 몬스터"></td>
+    <td><img src="./Images/magician.png" width="100%" title="원거리 몬스터"></td>
+    <td><img src="./Images/flying.png" width="100%" title="공중 공격 몬스터"></td>
   </tr>
 </table>
 
@@ -49,7 +50,7 @@
 ## 기여 및 역할
 + 근거리 몬스터
     + 근거리 몬스터 애니메이션: 상황에 따라 공격·추적 등 애니메이션 전환 구현
-    
+
     <table>
       <tr>
         <td><img src="./Images/melee_blackboard.png" width="100%"></td>
