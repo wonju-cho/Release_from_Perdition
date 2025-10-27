@@ -14,8 +14,7 @@
 - [기여 및 역할](#기여-및-역할) 
 
 ## 주요 기능
-<video src="./Images/shadow.mp4" width="70%" autoplay loop muted playsinline title="그림자 기능"></video>
-
+![그림자 기능](./Images/shadow.gif)
 + 그림자 기능
     + **소환**: 플레이어는 자신의 분신을 일정 거리 안에 소환시킬 수 있습니다.
     + **위치 변경**: ‘Q’키를 눌러 플레이어와 그림자의 위치를 변경할 수 있습니다.
